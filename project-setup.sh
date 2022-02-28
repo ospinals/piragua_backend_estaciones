@@ -14,16 +14,17 @@ mkdir piragua-src
 cd piragua-src
 
 #create env file fro django env
-touch .env
-echo POSTGRES_USER=$(cat ../../user) >> .env
-echo POSTGRES_PASS=$(cat ../../pass) >> .env
-echo POSTGRES_DB=$(cat ../../postgres_db) >> .env
-echo DATABASE=$(cat ../../database) >> .env
-echo PG_HOST=$(cat ../../host) >> .env
-echo PG_PORT=$(cat ../../port) >> .env
-echo SECRET_KEY=$(cat ../../secret_key) >> .env
-echo DEBUG=True >> .env
-echo ALLOWED_HOSTS=$(cat ../../allowed_host) >> .env
+rm ../.env
+touch ../.env
+echo POSTGRES_USER=$(cat ../../user) >> ../.env
+echo POSTGRES_PASS=$(cat ../../pass) >> ../.env
+echo POSTGRES_DB=$(cat ../../postgres_db) >> ../.env
+echo DATABASE=$(cat ../../database) >> ../.env
+echo PG_HOST=$(cat ../../host) >> ../.env
+echo PG_PORT=$(cat ../../port) >> ../.env
+echo SECRET_KEY=$(cat ../../secret_key) >> ../.env
+echo DEBUG=True >> ../.env
+echo ALLOWED_HOSTS=$(cat ../../allowed_host) >> ../.env
 
 #setup python environment
 python3 -m venv env
