@@ -253,7 +253,7 @@ class Corregimientos(models.Model):
     codigo = models.CharField(unique=True, max_length=150)
     nombre = models.CharField(max_length=150)
     area = models.FloatField()
-    poly = models.TextField(blank=True, null=True)  # This field type is a guess.
+    poly = models.PolygonField(blank=True, null=True)
     municipio = models.ForeignKey('Municipios', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
@@ -956,8 +956,8 @@ class Municipios(models.Model):
     area = models.FloatField()
     color = models.CharField(max_length=10)
     uuid = models.UUIDField()
-    centroide = models.TextField(blank=True, null=True)  # This field type is a guess.
-    poly = models.TextField(blank=True, null=True)  # This field type is a guess.
+    centroide = models.PointField(blank=True, null=True)
+    poly = models.PolygonField(blank=True, null=True)
     territorial = models.ForeignKey('Territoriales', models.DO_NOTHING)
 
     class Meta:
@@ -989,8 +989,8 @@ class NivelesSubsiguientes1(models.Model):
     area = models.FloatField()
     color = models.CharField(max_length=10)
     uuid = models.UUIDField()
-    poly = models.TextField(blank=True, null=True)  # This field type is a guess.
-    centroide = models.TextField(blank=True, null=True)  # This field type is a guess.
+    poly = models.PolygonField(blank=True, null=True)
+    centroide = models.PointField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1010,9 +1010,9 @@ class NivelesSubsiguientes2(models.Model):
     nombre_subzona_hidrografica = models.CharField(max_length=150)
     cuenca = models.CharField(max_length=150)
     uuid = models.UUIDField()
-    poly = models.TextField(blank=True, null=True)  # This field type is a guess.
+    poly = models.PolygonField(blank=True, null=True)
     nivel_subsiguiente = models.ForeignKey(NivelesSubsiguientes1, models.DO_NOTHING)
-    centroide = models.TextField(blank=True, null=True)  # This field type is a guess.
+    centroide = models.PointField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1187,26 +1187,14 @@ class Secciones(models.Model):
         db_table = 'secciones'
 
 
-class SpatialRefSys(models.Model):
-    srid = models.IntegerField(primary_key=True)
-    auth_name = models.CharField(max_length=256, blank=True, null=True)
-    auth_srid = models.IntegerField(blank=True, null=True)
-    srtext = models.CharField(max_length=2048, blank=True, null=True)
-    proj4text = models.CharField(max_length=2048, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'spatial_ref_sys'
-
-
 class Territoriales(models.Model):
     nombre = models.CharField(unique=True, max_length=30)
     subregion = models.CharField(max_length=30)
     area = models.FloatField()
     color = models.CharField(max_length=10)
     uuid = models.UUIDField()
-    centroide = models.TextField(blank=True, null=True)  # This field type is a guess.
-    poly = models.TextField(blank=True, null=True)  # This field type is a guess.
+    centroide = models.PointField(blank=True, null=True)
+    poly = models.PolygonField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1245,7 +1233,7 @@ class Veredas(models.Model):
     codigo = models.CharField(unique=True, max_length=150)
     nombre = models.CharField(max_length=150)
     area = models.FloatField()
-    poly = models.TextField(blank=True, null=True)  # This field type is a guess.
+    poly = models.PolygonField(blank=True, null=True)
     corregimiento = models.ForeignKey(Corregimientos, models.DO_NOTHING, blank=True, null=True)
     municipio = models.ForeignKey(Municipios, models.DO_NOTHING, blank=True, null=True)
 

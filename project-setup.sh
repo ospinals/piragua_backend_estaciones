@@ -13,6 +13,18 @@ rm -rf piragua-src
 mkdir piragua-src
 cd piragua-src
 
+#create env file fro django env
+touch .env
+echo POSTGRES_USER=$(cat ../../user) >> .env
+echo POSTGRES_PASS=$(cat ../../pass) >> .env
+echo POSTGRES_DB=$(cat ../../postgres_db) >> .env
+echo DATABASE=$(cat ../../database) >> .env
+echo PG_HOST=$(cat ../../host) >> .env
+echo PG_PORT=$(cat ../../port) >> .env
+echo SECRET_KEY=$(cat ../../secret_key) >> .env
+echo DEBUG=True >> .env
+echo ALLOWED_HOSTS=$(cat ../../allowed_host) >> .env
+
 #setup python environment
 python3 -m venv env
 source env/bin/activate
@@ -36,19 +48,36 @@ python3 -m pip install django-environ==0.4.5
 python3 -m pip freeze > requirements.txt
 
 #create django project
-python3 -m django startproject stations_data_api .
+python3 -m django startproject estaciones_datos_api .
+
+#set import of django environ in setting.py
+perl -i -slpe 'print $s if $. == $n; $. = 0 if eof' -- -n=15 \
+-s="import environ 
+
+env=environ.Env(DEBUG=(bool, False))
+environ.Env.read_env(env_file='.env')
+
+" \
+estaciones_datos_api/settings.py
 
 #create stations endpoint django app
-python3 manage.py startapp stations
+python3 manage.py startapp estaciones
 
 echo "
+SECRET_KEY = env('SECRET_KEY')
+
+DEBUG = env('DEBUG')
+
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(' ')
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'piragua',#BASE_DIR / 'db.sqlite3',
-        'HOST': 'db1.piraguacorantioquia.com.co',
-        'USER': 'app_db',
-        'PASSWORD': open('$db_pass_file').read(),
+        'ENGINE': env('DATABASE'),
+        'NAME': env('POSTGRES_DB'),
+        'HOST': env('PG_HOST'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASS'),
+        'PORT': env('PG_PORT') 
     }
 }
 
@@ -84,17 +113,47 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    'stations',
+    'estaciones',
     'leaflet',
     'rest_framework',
     'rest_framework_gis'
 
 ]
 
-" >> stations_data_api/settings.py
+" >> estaciones_datos_api/settings.py
 
 #import models from the database
 
-python3 manage.py inspectdb > stations/models.py
+python3 manage.py inspectdb > estaciones/models.py
+
+
+echo "from django.contrib import admin
+from leaflet.admin import LeafletGeoAdmin
+from .models import Estaciones
+
+class EstacionesAdmin(LeafletGeoAdmin):
+    list_display=['codigo',
+                'tipo',
+                'fuente',
+                'altitud',
+                'latitud',
+                'longitud',
+                'ubicacion',
+                'database',
+                'table',
+                'codigo_ideam',
+                'categoria_ideam',
+                'emails',
+                'habilitado',
+                'municipio',
+                'nivel_subsiguiente',
+                'nivel_subsiguiente_2',
+                'territorial',]
+
+
+admin.site.register(Estaciones, EstacionesAdmin)" > estaciones/admin.py
+
+##perl -nle'print $& while m{(?<=class )(.*)(?=\(models.Model)}g' stations/models.py
+##perl -nle'print $& while m{(?<=\(models.Model\))(.*)(?=Class\ Meta)}g' stations/models.py
 
 

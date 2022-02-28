@@ -23,21 +23,3 @@ class EstacionesAdmin(LeafletGeoAdmin):
 
 
 admin.site.register(Estaciones, EstacionesAdmin)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

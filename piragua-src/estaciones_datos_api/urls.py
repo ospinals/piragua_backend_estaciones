@@ -1,4 +1,4 @@
-"""stations_data_api URL Configuration
+"""estaciones_datos_api URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
