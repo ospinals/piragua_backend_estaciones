@@ -13,7 +13,7 @@ rm -rf piragua-src
 mkdir piragua-src
 cd piragua-src
 
-#create env file fro django env
+#create env file for django env
 rm ../.env
 touch ../.env
 echo POSTGRES_USER=$(cat ../../user) >> ../.env
@@ -56,7 +56,7 @@ perl -i -slpe 'print $s if $. == $n; $. = 0 if eof' -- -n=15 \
 -s="import environ 
 
 env=environ.Env(DEBUG=(bool, False))
-environ.Env.read_env(env_file='.env')
+environ.Env.read_env(env_file='../.env')
 
 " \
 estaciones_datos_api/settings.py
@@ -126,6 +126,7 @@ INSTALLED_APPS = [
 #import models from the database
 
 python3 manage.py inspectdb > estaciones/models.py
+perl -pi -e 's/max_length=-1/max_length=99999/g' estaciones/models.py
 
 
 echo "from django.contrib import admin
