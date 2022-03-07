@@ -15,7 +15,7 @@ from pathlib import Path
 import environ 
 
 env=environ.Env(DEBUG=(bool, False))
-environ.Env.read_env(env_file='../.env')
+environ.Env.read_env(env_file='.env')
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -133,7 +133,7 @@ ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(' ')
 
 DATABASES = {
     'default': {
-        'ENGINE': env('DATABASE'),
+        'ENGINE': env('ENGINE'),
         'NAME': env('POSTGRES_DB'),
         'HOST': env('PG_HOST'),
         'USER': env('POSTGRES_USER'),
