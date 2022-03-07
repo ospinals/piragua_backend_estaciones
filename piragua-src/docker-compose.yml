@@ -9,13 +9,24 @@ services:
     command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
-    ports:
-      - 8000:8000
+    # ports:
+    #   - 8000:8000
     env_file:
       - .env
     restart: "on-failure"
     networks:
       - piragua-estaciones-api
+
+  nginx:
+    restart: always
+    depends_on:
+      - estaciones-api
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    ports: 8080:80
+    networks:
+      - estaciones-api
 
 networks:
   piragua-estaciones-api:
