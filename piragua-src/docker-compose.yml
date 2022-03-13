@@ -17,16 +17,30 @@ services:
     networks:
       - piragua-estaciones-api
 
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    container_name: piragua_frontend
+    volumes:
+      - ./app/node_modules
+      - ./client:/app
+    depends_on:
+      - piragua-estaciones-api
+    networks:
+      - piragua-estaciones-api
+
   nginx:
     restart: always
     depends_on:
-      - estaciones-api
+      - piragua-estaciones-api
     build:
       context: ./nginx
       dockerfile: Dockerfile.dev
-    ports: 8080:80
+    ports:
+      - 8080:80
     networks:
-      - estaciones-api
+      - piragua-estaciones-api
 
 networks:
   piragua-estaciones-api:
