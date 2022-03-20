@@ -5,7 +5,22 @@
 
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
-  background: #000000;
-  color: #ffffff;
-  border: 2px dashed #fff;
+  background: #fff;
+  color: #000;
+  /* border: 2px dashed #fff; */
+}
+
+.customMarker {
+  background-image: url(/public/iconos-aire/azul.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.customMarker span {
+  display: block;
+  margin-top: 10%;
+  margin-left: 35%;
+  color: #fff;
+  font-size: large;
 }

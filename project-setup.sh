@@ -117,8 +117,7 @@ INSTALLED_APPS = [
     'estaciones',
     'leaflet',
     'rest_framework',
-    'rest_framework_gis'
-
+    'rest_framework_gis',
 ]
 
 " >> estaciones_datos_api/settings.py
