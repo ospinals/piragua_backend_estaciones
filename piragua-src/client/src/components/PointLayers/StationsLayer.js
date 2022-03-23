@@ -1,17 +1,18 @@
 import React from "react";
 import { useContext, useState } from "react";
 import MarkerClusterGroup from "react-leaflet-markercluster";
-import { Alert, Spinner } from "react-bootstrap";
 import { Marker, Popup, LayersControl, LayerGroup } from "react-leaflet";
-import useSWR from "swr";
-import axios from "axios";
 
 import { Icon } from "leaflet";
 import L from "leaflet";
 
 import "../../App.css";
 
-export const icon = new Icon({
+import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
+import ActiveStationContext from "../../Context/ActiveStationContext";
+import StationsContext from "../../Context/StationsContext";
+
+export const iconAirQuality = new Icon({
   iconUrl: "iconos-aire/azul.svg",
   // shadowUrl: "leaf-shadow.png",
   iconSize: [48, 48],
@@ -19,8 +20,16 @@ export const icon = new Icon({
   popupAnchor: [0, -26],
 });
 
-const fetcher = (url) => axios.get(url).then((res) => res.data);
-const layerName = "Calidad aire";
+export const icon = new Icon({
+  iconUrl: "iconos-aire/verde.svg",
+  // shadowUrl: "leaf-shadow.png",
+  iconSize: [48, 48],
+  // iconAnchor: [22, 94],
+  popupAnchor: [0, -26],
+});
+
+const layerNameAirQuality = "Red Calidad aire";
+const layerName = "Red Meteorológica";
 
 const StationsLayer = () => {
   const createClusterCustomIcon = function (cluster) {
@@ -32,39 +41,61 @@ const StationsLayer = () => {
     });
   };
 
+  const stationsAirQuality = useContext(StationsAirQualityContext);
+  const stations = useContext(StationsContext);
+  // const activeStation = useContext(ActiveStationContext);
+
   const [activeStation, setActiveStation] = useState(null);
-
-  const { data, error } = useSWR("/api/v1/estaciones_aire", fetcher);
-  const stationsAirQuality = data && !error ? data : {};
-
-  if (error) {
-    return <Alert variant="danger">There is a problem</Alert>;
-  }
-  if (!data) {
-    return (
-      <Spinner
-        animation="border"
-        variant="danger"
-        role="status"
-        style={{
-          width: "300px",
-          height: "300px",
-          margin: "auto",
-          display: "block",
-        }}
-      />
-    );
-  }
 
   return (
     <>
+      <LayersControl.Overlay checked name={layerNameAirQuality}>
+        <LayerGroup name={layerNameAirQuality}>
+          <MarkerClusterGroup
+            showCoverageOnHover={false}
+            iconCreateFunction={createClusterCustomIcon}
+          >
+            {stationsAirQuality.features.map((station) => (
+              <Marker
+                key={station.properties.codigo}
+                position={[
+                  station.geometry.coordinates[1],
+                  station.geometry.coordinates[0],
+                ]}
+                onClick={() => {
+                  setActiveStation(station);
+                }}
+                icon={iconAirQuality}
+              >
+                <Popup
+                  position={[
+                    station.geometry.coordinates[1],
+                    station.geometry.coordinates[0],
+                  ]}
+                  onClose={() => {
+                    setActiveStation(null);
+                  }}
+                >
+                  <div>
+                    <h6>{station.properties.codigo}</h6>
+                    {/* <p>Level: {station.properties.level}</p>
+                  <p>Male: {station.properties.male}</p>
+                  <p>Female: {station.properties.female}</p> */}
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+          </MarkerClusterGroup>
+        </LayerGroup>
+      </LayersControl.Overlay>
+
       <LayersControl.Overlay checked name={layerName}>
         <LayerGroup name={layerName}>
           <MarkerClusterGroup
             showCoverageOnHover={false}
             iconCreateFunction={createClusterCustomIcon}
           >
-            {stationsAirQuality.features.map((station) => (
+            {stations.features.map((station) => (
               <Marker
                 key={station.properties.codigo}
                 position={[
@@ -86,7 +117,7 @@ const StationsLayer = () => {
                   }}
                 >
                   <div>
-                    <h6>{station.properties.codigo}</h6>
+                    <h6>{station.properties.tipo}</h6>
                     {/* <p>Level: {station.properties.level}</p>
                   <p>Male: {station.properties.male}</p>
                   <p>Female: {station.properties.female}</p> */}
