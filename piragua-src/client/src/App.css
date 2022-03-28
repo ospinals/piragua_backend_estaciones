@@ -11,7 +11,7 @@
 }
 
 .customMarker {
-  background-image: url(/public/iconos-aire/azul.png);
+  background-image: url(/public/circulo_azul.png);
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -19,8 +19,19 @@
 
 .customMarker span {
   display: block;
-  margin-top: 10%;
-  margin-left: 35%;
+  /* margin-left: 38%; */
+  text-align: center;
+  margin-top: 15%;
   color: #fff;
-  font-size: large;
+  font-size: x-large;
+}
+
+.location-control {
+  top: 60px !important;
+  z-index: 500 !important;
+}
+
+.piragua-control {
+  top: 100px !important;
+  z-index: 500 !important;
 }

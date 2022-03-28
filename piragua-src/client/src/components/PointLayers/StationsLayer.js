@@ -89,7 +89,7 @@ const StationsLayer = () => {
         </LayerGroup>
       </LayersControl.Overlay>
 
-      <LayersControl.Overlay checked name={layerName}>
+      {/* <LayersControl.Overlay checked name={layerName}>
         <LayerGroup name={layerName}>
           <MarkerClusterGroup
             showCoverageOnHover={false}
@@ -118,16 +118,16 @@ const StationsLayer = () => {
                 >
                   <div>
                     <h6>{station.properties.tipo}</h6>
-                    {/* <p>Level: {station.properties.level}</p>
-                  <p>Male: {station.properties.male}</p>
-                  <p>Female: {station.properties.female}</p> */}
+                  // <p>Level: {station.properties.level}</p>
+                  // <p>Male: {station.properties.male}</p>
+                  // <p>Female: {station.properties.female}</p>
                   </div>
                 </Popup>
               </Marker>
             ))}
           </MarkerClusterGroup>
         </LayerGroup>
-      </LayersControl.Overlay>
+      </LayersControl.Overlay> */}
     </>
   );
 };
