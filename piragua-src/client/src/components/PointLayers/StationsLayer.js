@@ -43,9 +43,7 @@ const StationsLayer = () => {
 
   const stationsAirQuality = useContext(StationsAirQualityContext);
   const stations = useContext(StationsContext);
-  // const activeStation = useContext(ActiveStationContext);
-
-  const [activeStation, setActiveStation] = useState(null);
+  const { activeStation, setActiveStation } = useContext(ActiveStationContext);
 
   return (
     <>

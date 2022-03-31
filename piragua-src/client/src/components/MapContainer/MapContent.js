@@ -17,7 +17,8 @@ import BaseLayers from "../BaseLayers/BaseLayers";
 import { baseLayersData } from "../../assets/MapBaseLayers";
 import StationsLayer from "../PointLayers/StationsLayer";
 import LocateControl from "./LocateControl";
-import useGeoLocation from "./UseGeolocation";
+import StationPanel from "../Panels/StationPanel";
+import LegendControl from "./LegendControl";
 
 import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
 import ActiveStationContext from "../../Context/ActiveStationContext";
@@ -30,6 +31,7 @@ const MapContent = () => {
   const position = [6.2366666666667, -75.580277777778];
   const zoom = 9;
   const [map, setMap] = useState(null);
+  const [activeStation, setActiveStation] = useState(null);
 
   const { data: dataStationsAirQuality, error: errorStationsAirQuality } =
     useSWR("/api/v1/estaciones_aire", fetcher);
@@ -67,7 +69,9 @@ const MapContent = () => {
 
   return (
     <MapContext.Provider value={map}>
-      <ActiveStationContext.Provider value={null}>
+      <ActiveStationContext.Provider
+        value={{ activeStation, setActiveStation }}
+      >
         <StationsContext.Provider value={stations}>
           <StationsAirQualityContext.Provider value={stationsAirQuality}>
             <MapContainer
@@ -81,6 +85,8 @@ const MapContent = () => {
                 <StationsLayer />
               </LayersControl>
               <LocateControl />
+              <LegendControl />
+              <StationPanel />
             </MapContainer>
           </StationsAirQualityContext.Provider>
         </StationsContext.Provider>

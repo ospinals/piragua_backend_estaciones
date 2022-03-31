@@ -27,11 +27,39 @@
 }
 
 .location-control {
-  top: 60px !important;
+  top: 55px !important;
+  z-index: 500 !important;
+}
+
+.legend-control {
+  top: 102px !important;
   z-index: 500 !important;
 }
 
 .piragua-control {
   top: 100px !important;
   z-index: 500 !important;
+}
+
+.dropdown-station {
+  position: relative;
+  font-size: large;
+  top: 10px !important;
+  left: 20px !important;
+  z-index: 800 !important;
+}
+
+.station-panel-control {
+  background-color: #fff;
+  /* bottom: ; */
+  bottom: 12% !important;
+  height: 25%;
+  left: 10% !important;
+  right: 10% !important;
+  width: auto;
+  z-index: 500 !important;
+  border-radius: 20px !important;
+  border-color: #ddd;
+  border-width: 1px;
+  border-style: solid;
 }
