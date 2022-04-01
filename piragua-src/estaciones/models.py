@@ -1208,3 +1208,50 @@ class Veredas(models.Model):
     class Meta:
         managed = False
         db_table = 'veredas'
+
+
+
+### Custom Models
+
+class SerieTiempo(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    fecha = models.DateTimeField(blank=True, null=True)
+    valor = models.FloatField()
+    variable = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = None
+
+
+
+class MapaICA(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    valor = models.FloatField()
+    variable = models.CharField(max_length=255)
+    codigo = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = None
+
+class VariablesDisponibles(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    variable = models.CharField(max_length=255)
+
+class MetadataEstacionesAire(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    codigo = models.CharField(max_length=255)
+    latitud = models.FloatField()
+    longitud = models.FloatField()
+    ubicacion = models.CharField(max_length=255)
+    parametro_instrumentacion_id = models.IntegerField()
+    nombre = models.CharField(max_length=255)
+    limite_norma = models.CharField(max_length=255)
+
+
+

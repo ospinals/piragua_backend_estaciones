@@ -1,8 +1,12 @@
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 from rest_framework_gis.serializers import GeoFeatureModelSerializer, GeometrySerializerMethodField
 from django.contrib.gis.geos import Point
+import pandas as pd
 
-from .models import Estaciones, EstacionesAire
+
+from .models import Estaciones, SerieTiempo, MapaICA, MetadataEstacionesAire
+from .models import EstacionesAire, ParametrosEstacionAire, CalidadesAire
 
 class EstacionesSerializer(GeoFeatureModelSerializer):
 
@@ -31,7 +35,33 @@ class EstacionesAireSerializer(GeoFeatureModelSerializer):
         fields = ["codigo", "tipo", "altitud", "latitud", "longitud", "ubicacion", "habilitado", "municipio", "nivel_subsiguiente", "nivel_subsiguiente_2", "territorial", "tipo_trama",]
         read_only_fields = ['codigo']
 
- 
+
+class SerieTiempoSerializer(ModelSerializer):
+    
+
+    class Meta:
+        model = SerieTiempo
+        fields = ["fecha", "valor", "variable"]
+
+
+class MapaICASerializer(ModelSerializer):
+
+    class Meta:
+        model = SerieTiempo
+        fields = ["valor", "variable", "codigo"]
+
+
+class MetadataEstacionesAireSerializer(ModelSerializer):
+
+    class Meta:
+        model = MetadataEstacionesAire
+        fields = ["codigo", "latitud", "longitud", "ubicacion", "parametro_instrumentacion_id", "nombre", "limite_norma"]
+
+
+
+
+
+
 
 
         
