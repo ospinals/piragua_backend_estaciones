@@ -46,20 +46,43 @@
   font-size: large;
   top: 10px !important;
   left: 20px !important;
-  z-index: 800 !important;
+  z-index: 1000 !important;
 }
 
 .station-panel-control {
   background-color: #fff;
   /* bottom: ; */
   bottom: 12% !important;
-  height: 25%;
+  height: 25% !important;
   left: 10% !important;
   right: 10% !important;
   width: auto;
-  z-index: 500 !important;
+  z-index: 1000 !important;
   border-radius: 20px !important;
   border-color: #ddd;
   border-width: 1px;
   border-style: solid;
+  position: absolute !important;
+}
+
+.close-button {
+  position: absolute !important;
+  right: 10px !important;
+  top: 10px !important;
+  z-index: 1002 !important;
+}
+
+.hide {
+  display: none;
+}
+
+body {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.boton-graficar {
+  position: absolute !important;
+  right: 20px !important;
+  bottom: 20px !important;
+  z-index: 1002 !important;
 }

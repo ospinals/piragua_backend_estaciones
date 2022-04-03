@@ -12,9 +12,10 @@ from rest_framework.renderers import JSONRenderer
 from django.views.generic.list import ListView
 from django.db import connection
 from django.core.serializers import serialize
+import pandas as pd
 
-from .models import Estaciones, EstacionesAire, SerieTiempo, MetadataEstacionesAire
-from .serializers import EstacionesSerializer, EstacionesAireSerializer, SerieTiempoSerializer, MetadataEstacionesAireSerializer
+from .models import Estaciones, EstacionesAire, SerieTiempo, MetadataEstacionesAire, ICAEstaciones
+from .serializers import ICAEstacionesSerializer, EstacionesSerializer, EstacionesAireSerializer, SerieTiempoSerializer, MetadataEstacionesAireSerializer
 
 # ## CONSTANTS ####################################################################################################### #
 
@@ -93,28 +94,46 @@ def EstacionesAireSerieTiempo(request):
 @api_view(['GET'])
 def EstacionesAireICAEstaciones(request):            
 
-    fecha = request.GET.get('fecha_inicial').replace("T", " ")
+    fecha = pd.to_datetime(request.GET.get('fecha').replace("T", " ")).strftime("%Y-%m-%d %H:00:00")
 
     query = f"""
-        SELECT 1 as id, fecha, muestra as valor 
-        FROM calidades_aire 
-        WHERE 
-        parametro_estacion_id in (
-            SELECT id FROM parametros_estacion_aire 
-            WHERE estacion_aire_id IN (
-                SELECT id FROM estaciones_aire))
-        AND 
-        calidad = 1 
-        AND 
-        fecha = TO_CHAR(cast('{fecha}' AS timestamp), 'yyyy-mm-dd HH')
+            WITH metadata AS (SELECT codigo, longitud, latitud, ubicacion, parametro_instrumentacion_id, parametros_estacion_aire.id AS estacion_id, nombre, limite_norma 
+            FROM parametros_estacion_aire 
+            INNER JOIN
+            Parametros_instrumentacion
+            ON Parametros_instrumentacion.id = parametros_estacion_aire.parametro_instrumentacion_id
+            INNER JOIN
+            estaciones_aire
+            ON estaciones_aire.id = parametros_estacion_aire.estacion_aire_id
+            WHERE 
+            estacion_aire_id IN (SELECT id FROM estaciones_aire)),
+
+            datos AS (select muestra AS valor, fecha, parametro_estacion_id
+            FROM calidades_aire
+            WHERE calidad = 1 
+            AND fecha = %s)
+
+            SELECT 1 as id, codigo, valor, nombre as variable
+            FROM datos
+            FULL JOIN metadata
+            ON metadata.estacion_id = datos.parametro_estacion_id
         """
 
 
-    queryset = SerieTiempo.objects.raw(query)#, [codigo, fecha_inicial, fecha_final])
-    
-    json = SerieTiempoSerializer(queryset, many = True).data
 
-    return JsonResponse(json, safe = False)
+    queryset = ICAEstaciones.objects.raw(query, [fecha])
+
+    
+    json = ICAEstacionesSerializer(queryset, many = True).data
+
+    dic = {}
+    for i in json:
+        dic[i["codigo"]] = {}
+
+    for i in json:
+        dic[i["codigo"]][i["variable"]] = i["valor"]
+
+    return JsonResponse(dic, safe = False)
 
 
 @api_view(['GET'])
@@ -137,4 +156,8 @@ def EstacionesAireMetadata(request):
     json = MetadataEstacionesAireSerializer(queryset, many = True).data
 
     return JsonResponse(json, safe = False)
+
+
+
+
 

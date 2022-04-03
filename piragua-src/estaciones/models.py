@@ -1226,7 +1226,7 @@ class SerieTiempo(models.Model):
 
 
 
-class MapaICA(models.Model):
+class ICAEstaciones(models.Model):
 
     id = models.AutoField(primary_key=True)
     valor = models.FloatField()

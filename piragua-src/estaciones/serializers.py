@@ -5,8 +5,8 @@ from django.contrib.gis.geos import Point
 import pandas as pd
 
 
-from .models import Estaciones, SerieTiempo, MapaICA, MetadataEstacionesAire
-from .models import EstacionesAire, ParametrosEstacionAire, CalidadesAire
+from .models import Estaciones, SerieTiempo, MetadataEstacionesAire, ICAEstaciones
+from .models import EstacionesAire
 
 class EstacionesSerializer(GeoFeatureModelSerializer):
 
@@ -44,18 +44,24 @@ class SerieTiempoSerializer(ModelSerializer):
         fields = ["fecha", "valor", "variable"]
 
 
-class MapaICASerializer(ModelSerializer):
+class ICAEstacionesSerializer(ModelSerializer):
 
     class Meta:
-        model = SerieTiempo
+        model = ICAEstaciones
         fields = ["valor", "variable", "codigo"]
 
 
-class MetadataEstacionesAireSerializer(ModelSerializer):
+class MetadataEstacionesAireSerializer(GeoFeatureModelSerializer):
+
+    point = GeometrySerializerMethodField()
+
+    def get_point(self, obj):
+        return Point(y = float(obj.latitud), x = float(obj.longitud), srid=4326)
 
     class Meta:
         model = MetadataEstacionesAire
-        fields = ["codigo", "latitud", "longitud", "ubicacion", "parametro_instrumentacion_id", "nombre", "limite_norma"]
+        geo_field = "point"
+        fields = ["codigo", "latitud", "longitud", "ubicacion", "parametro_instrumentacion_id", "nombre", "limite_norma", "point"]
 
 
 

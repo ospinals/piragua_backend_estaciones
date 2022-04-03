@@ -1,17 +1,9 @@
 import React from "react";
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  LayersControl,
-  ZoomControl,
-  useMap,
-} from "react-leaflet";
+import { MapContainer, LayersControl } from "react-leaflet";
 import useSWR from "swr";
 import axios from "axios";
 import { Alert, Spinner } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 import BaseLayers from "../BaseLayers/BaseLayers";
 import { baseLayersData } from "../../assets/MapBaseLayers";
@@ -24,6 +16,8 @@ import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
 import ActiveStationContext from "../../Context/ActiveStationContext";
 import StationsContext from "../../Context/StationsContext";
 import MapContext from "../../Context/MapContext";
+import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelContext";
+import IcaStationsAirQualityContext from "../../Context/IcaStationsAirQualityContext";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -31,8 +25,27 @@ const MapContent = () => {
   const position = [6.2366666666667, -75.580277777778];
   const zoom = 9;
   const [map, setMap] = useState(null);
-  const [activeStation, setActiveStation] = useState(null);
 
+  const [activeStation, setActiveStation] = useState(null);
+  const changeActiveStation = (x) => setActiveStation(x);
+
+  const [openCloseStationPanel, setOpenCloseStationPanel] = useState(false);
+  const changeOpenCloseStationPanel = (x) => setOpenCloseStationPanel(x);
+
+  /// Get Datetime to know when to fetch data again and re render the app
+  const [state, setState] = useState({ num: 0 });
+  const counter = useRef(0);
+
+  // useEffect(() => {
+  //   if (counter.current < 10) {
+  //     counter.current += 1;
+  //     const timer = setTimeout(() => setState({ num: state.num + 1 }), 1000);
+
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [state]);
+
+  //// Load Data for app
   const { data: dataStationsAirQuality, error: errorStationsAirQuality } =
     useSWR("/api/v1/estaciones_aire", fetcher);
 
@@ -48,48 +61,64 @@ const MapContent = () => {
 
   const stations = dataStations && !errorStations ? dataStations : {};
 
-  if (errorStationsAirQuality || errorStations) {
+  const { data: dataIcaStations, error: errorIcaStations } = useSWR(
+    "/api/v1/estaciones_aire/ica_estaciones?fecha=2021-09-01T11:53:00",
+    fetcher
+  );
+
+  const icaStations =
+    dataIcaStations && !errorIcaStations ? dataIcaStations : {};
+
+  if (errorStationsAirQuality || errorStations || errorIcaStations) {
     return <Alert variant="danger">There is a problem</Alert>;
   }
-  if (!dataStations || !dataStationsAirQuality) {
+  if (!dataStations || !dataStationsAirQuality || !dataIcaStations) {
     return (
       <Spinner
         animation="border"
-        variant="danger"
+        variant="primary"
         role="status"
         style={{
           width: "300px",
           height: "300px",
           margin: "auto",
+          margintop: "20%",
           display: "block",
         }}
       />
     );
   }
 
+  //// Main Render of map content
   return (
     <MapContext.Provider value={map}>
       <ActiveStationContext.Provider
-        value={{ activeStation, setActiveStation }}
+        value={{ activeStation, changeActiveStation }}
       >
-        <StationsContext.Provider value={stations}>
-          <StationsAirQualityContext.Provider value={stationsAirQuality}>
-            <MapContainer
-              center={position}
-              zoom={zoom}
-              tapTolerance={500}
-              whenCreated={setMap}
-            >
-              <LayersControl>
-                <BaseLayers baseLayerData={baseLayersData} />
-                <StationsLayer />
-              </LayersControl>
-              <LocateControl />
-              <LegendControl />
-              <StationPanel />
-            </MapContainer>
-          </StationsAirQualityContext.Provider>
-        </StationsContext.Provider>
+        <OpenCloseStationPanelContext.Provider
+          value={{ openCloseStationPanel, changeOpenCloseStationPanel }}
+        >
+          <StationsContext.Provider value={stations}>
+            <StationsAirQualityContext.Provider value={stationsAirQuality}>
+              <IcaStationsAirQualityContext.Provider value={icaStations}>
+                <MapContainer
+                  center={position}
+                  zoom={zoom}
+                  tapTolerance={500}
+                  whenCreated={setMap}
+                >
+                  <LayersControl>
+                    <BaseLayers baseLayerData={baseLayersData} />
+                    <StationsLayer />
+                  </LayersControl>
+                  <LocateControl />
+                  <LegendControl />
+                  <StationPanel />
+                </MapContainer>
+              </IcaStationsAirQualityContext.Provider>
+            </StationsAirQualityContext.Provider>
+          </StationsContext.Provider>
+        </OpenCloseStationPanelContext.Provider>
       </ActiveStationContext.Provider>
     </MapContext.Provider>
   );

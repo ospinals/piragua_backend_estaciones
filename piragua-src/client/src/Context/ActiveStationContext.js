@@ -1,4 +1,7 @@
 import { createContext } from "react";
 
-const ActiveStationContext = createContext();
+const ActiveStationContext = createContext({
+  activeStation: null,
+  changeActiveStation: () => {},
+});
 export default ActiveStationContext;
