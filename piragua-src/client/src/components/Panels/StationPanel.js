@@ -6,14 +6,20 @@ import "../../App.css";
 import MapContext from "../../Context/MapContext";
 import ActiveStationContext from "../../Context/ActiveStationContext";
 import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelContext";
+import IcaStationsAirQualityContext from "../../Context/IcaStationsAirQualityContext";
+import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
 import Dropdown from "react-bootstrap/Dropdown";
 import { CloseButton, Button } from "react-bootstrap";
 
 const StationPanel = () => {
   const map = useContext(MapContext);
+  const stationsAirQuality = useContext(StationsAirQualityContext);
+  const icaStations = useContext(IcaStationsAirQualityContext);
+
   const { activeStation, changeActiveStation } =
     useContext(ActiveStationContext);
 
+  console.log(icaStations ? icaStations[activeStation] : null);
   const { openCloseStationPanel, changeOpenCloseStationPanel } = useContext(
     OpenCloseStationPanelContext
   );
@@ -32,6 +38,13 @@ const StationPanel = () => {
     console.log("clic");
   };
 
+  const replaceNaN = (x) => {
+    if (isNaN(x)) {
+      return "-";
+    } else return x;
+  };
+
+  console.log(icaStations);
   // The forwardRef is important!!
   // Dropdown needs access to the DOM node in order to position the Menu
   const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
@@ -107,6 +120,15 @@ const StationPanel = () => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
+        <div className="station-panel-content">
+          <div className="station-panel-value">
+            {icaStations && activeStation
+              ? replaceNaN(parseInt(icaStations[activeStation]["PM 2.5"]))
+              : null}
+          </div>
+          {/* <div className="station-panel-units">µg/m³</div>
+          <div className="station-panel-variable">PM 2.5</div> */}
+        </div>
         <div className="boton-graficar">
           <Button
             variant="primary"
@@ -115,6 +137,8 @@ const StationPanel = () => {
               // boxShadow: "2px 2px 1px #6394CF",
               borderColor: "#6394CF",
               backgroundColor: "#6394CF",
+              fontSize: "x-small",
+              boxSizing: "border-box",
             }}
             onClick={handleClickPlot}
           >

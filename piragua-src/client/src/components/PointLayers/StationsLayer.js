@@ -26,7 +26,7 @@ export const iconAirQualityGood = new Icon({
   popupAnchor: [0, -26],
 });
 
-export const iconAirQualityAceptable = new Icon({
+export const iconAirQualityAcceptable = new Icon({
   iconUrl: "iconos-aire/amarillo.svg",
   iconSize: [48, 48],
   popupAnchor: [0, -26],
@@ -64,14 +64,14 @@ export const icon = new Icon({
   popupAnchor: [0, -26],
 });
 
-const layerNameAirQuality = "Red Calidad aire";
-const layerName = "Red Meteorológica";
+const layerNameAirQuality = "Red calidad aire";
+const layerName = "Red meteorológica";
 
 const StationsLayer = () => {
   const IconsAirQuality = {
     NoData: iconAirQualityNoData,
     Good: iconAirQualityGood,
-    Aceptable: iconAirQualityAceptable,
+    Acceptable: iconAirQualityAcceptable,
     Dangerous: iconAirQualityDangerous,
     Harm: iconAirQualityHarm,
     HarmSensible: iconAirQualityHarmSensible,
@@ -80,12 +80,12 @@ const StationsLayer = () => {
 
   const evaluateIca = (x) => {
     let evaluation = null;
-    if (x === null) {
+    if (x === null || x === undefined) {
       evaluation = "NoData";
     } else if (x < 20) {
       evaluation = "Good";
     } else if (x < 37) {
-      evaluation = "Aceptable";
+      evaluation = "Acceptable";
     } else if (x < 60) {
       evaluation = "HarmSensible";
     } else if (x < 80) {
