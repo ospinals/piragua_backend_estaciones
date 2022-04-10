@@ -1232,6 +1232,7 @@ class ICAEstaciones(models.Model):
     valor = models.FloatField()
     variable = models.CharField(max_length=255)
     codigo = models.CharField(max_length=255)
+    unidad = models.CharField(max_length=255)
 
     class Meta:
         managed = False

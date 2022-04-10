@@ -8,18 +8,70 @@ import ActiveStationContext from "../../Context/ActiveStationContext";
 import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelContext";
 import IcaStationsAirQualityContext from "../../Context/IcaStationsAirQualityContext";
 import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
+import IcaStationsUnitsContext from "../../Context/IcaStationsUnitsContext";
 import Dropdown from "react-bootstrap/Dropdown";
 import { CloseButton, Button } from "react-bootstrap";
+import { Icon } from "leaflet";
+
+export const iconAirQualityNoData = new Icon({
+  iconUrl: "iconos-aire/azul.svg",
+  iconSize: [48, 48],
+  popupAnchor: [0, -26],
+});
+
+export const iconAirQualityGood = new Icon({
+  iconUrl: "iconos-aire/verde.svg",
+  iconSize: [48, 48],
+  popupAnchor: [0, -26],
+});
+
+export const iconAirQualityAcceptable = new Icon({
+  iconUrl: "iconos-aire/amarillo.svg",
+  iconSize: [48, 48],
+  popupAnchor: [0, -26],
+});
+
+export const iconAirQualityHarmSensible = new Icon({
+  iconUrl: "iconos-aire/naranja.svg",
+  iconSize: [48, 48],
+  popupAnchor: [0, -26],
+});
+
+export const iconAirQualityHarm = new Icon({
+  iconUrl: "iconos-aire/rojo.svg",
+  iconSize: [48, 48],
+  popupAnchor: [0, -26],
+});
+
+export const iconAirQualityVeryHarm = new Icon({
+  iconUrl: "iconos-aire/morado.svg",
+  iconSize: [48, 48],
+  popupAnchor: [0, -26],
+});
+
+export const iconAirQualityDangerous = new Icon({
+  iconUrl: "iconos-aire/marron.svg",
+  iconSize: [48, 48],
+  popupAnchor: [0, -26],
+});
+
+export const icon = new Icon({
+  iconUrl: "iconos-aire/verde.svg",
+  // shadowUrl: "leaf-shadow.png",
+  iconSize: [48, 48],
+  // iconAnchor: [22, 94],
+  popupAnchor: [0, -26],
+});
 
 const StationPanel = () => {
   const map = useContext(MapContext);
   const stationsAirQuality = useContext(StationsAirQualityContext);
   const icaStations = useContext(IcaStationsAirQualityContext);
+  const icaUnits = useContext(IcaStationsUnitsContext);
 
   const { activeStation, changeActiveStation } =
     useContext(ActiveStationContext);
 
-  console.log(icaStations ? icaStations[activeStation] : null);
   const { openCloseStationPanel, changeOpenCloseStationPanel } = useContext(
     OpenCloseStationPanelContext
   );
@@ -44,7 +96,56 @@ const StationPanel = () => {
     } else return x;
   };
 
-  console.log(icaStations);
+  const IconsAirQuality = {
+    NoData: "/iconos-aire/azul.svg",
+    Good: "/iconos-aire/verde.svg",
+    Acceptable: "/iconos-aire/amarillo.svg",
+    Dangerous: "/iconos-aire/marron.svg",
+    Harm: "/iconos-aire/rojo.svg",
+    HarmSensible: "/iconos-aire/naranja.svg",
+    VeryHarm: "/iconos-aire/morado.svg",
+  };
+
+  const AirQualityEvaluation = {
+    NoData: "No Data",
+    Good: "Buena",
+    Acceptable: "Aceptable",
+    Dangerous: "Peligrosa",
+    Harm: "Dañina",
+    HarmSensible: "Grupos sensibles",
+    VeryHarm: "Muy dañina",
+  };
+
+  const AirQualityColor = {
+    NoData: "nodata",
+    Good: "green",
+    Acceptable: "yellow",
+    Dangerous: "brown",
+    Harm: "red",
+    HarmSensible: "orange",
+    VeryHarm: "purple",
+  };
+
+  const evaluateIca = (x) => {
+    let evaluation = null;
+    if (x === null || x === undefined) {
+      evaluation = "NoData";
+    } else if (x < 20) {
+      evaluation = "Good";
+    } else if (x < 37) {
+      evaluation = "Acceptable";
+    } else if (x < 60) {
+      evaluation = "HarmSensible";
+    } else if (x < 80) {
+      evaluation = "Harm";
+    } else if (x < 100) {
+      evaluation = "VeryHarm";
+    } else {
+      evaluation = "Dangerous";
+    }
+    return evaluation;
+  };
+
   // The forwardRef is important!!
   // Dropdown needs access to the DOM node in order to position the Menu
   const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
@@ -85,18 +186,15 @@ const StationPanel = () => {
     }
   );
 
+  console.log(icaUnits);
+
   return (
     <>
       <div
         className={`${
-          openCloseStationPanel
-            ? "station-panel-control"
-            : "station-panel-control hide"
+          openCloseStationPanel ? "station-panel-control" : "hide"
         }`}
       >
-        <div className="close-button">
-          <CloseButton onClick={handleClick} />
-        </div>
         <div className="dropdown-station">
           <Dropdown itemType="button" onSelect={handleSelect}>
             <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
@@ -120,21 +218,40 @@ const StationPanel = () => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
-        <div className="station-panel-content">
-          <div className="station-panel-value">
-            {icaStations && activeStation
-              ? replaceNaN(parseInt(icaStations[activeStation]["PM 2.5"]))
-              : null}
-          </div>
-          {/* <div className="station-panel-units">µg/m³</div>
-          <div className="station-panel-variable">PM 2.5</div> */}
+        <div className="station-panel-icon">
+          <img
+            src={
+              icaStations && activeStation
+                ? IconsAirQuality[
+                    evaluateIca(icaStations[activeStation]["PM 2.5"])
+                  ]
+                : null
+            }
+            alt=""
+            className="station-panel-icon-props"
+          ></img>
         </div>
-        <div className="boton-graficar">
+        <div
+          className={
+            icaStations && activeStation
+              ? "station-panel-variable " +
+                AirQualityColor[
+                  evaluateIca(icaStations[activeStation]["PM 2.5"])
+                ]
+              : "station-panel-variable"
+          }
+        >
+          {icaStations && activeStation
+            ? AirQualityEvaluation[
+                evaluateIca(icaStations[activeStation]["PM 2.5"])
+              ]
+            : null}
+        </div>
+        <div className="plot-button">
           <Button
             variant="primary"
             size="sm"
             style={{
-              // boxShadow: "2px 2px 1px #6394CF",
               borderColor: "#6394CF",
               backgroundColor: "#6394CF",
               fontSize: "x-small",
@@ -144,6 +261,17 @@ const StationPanel = () => {
           >
             VER DATOS
           </Button>
+        </div>
+        <div className="close-button">
+          <CloseButton onClick={handleClick} />
+        </div>
+        <div className="station-panel-value">
+          {icaStations && activeStation
+            ? replaceNaN(parseInt(icaStations[activeStation]["PM 2.5"]))
+            : null}
+        </div>
+        <div className="station-panel-units">
+          {icaUnits && activeStation ? icaUnits[activeStation]["PM 2.5"] : null}
         </div>
       </div>
     </>

@@ -18,6 +18,7 @@ import StationsContext from "../../Context/StationsContext";
 import MapContext from "../../Context/MapContext";
 import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelContext";
 import IcaStationsAirQualityContext from "../../Context/IcaStationsAirQualityContext";
+import IcaStationsUnitsContext from "../../Context/IcaStationsUnitsContext";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -52,6 +53,16 @@ const MapContent = () => {
   const stationsAirQuality =
     dataStationsAirQuality && !errorStationsAirQuality
       ? dataStationsAirQuality
+      : {};
+
+  const {
+    data: dataStationsAirQualityUnits,
+    error: errorStationsAirQualityUnits,
+  } = useSWR("/api/v1/estaciones_aire/aire_unidades", fetcher);
+
+  const stationsAirQualityUnits =
+    dataStationsAirQualityUnits && !errorStationsAirQualityUnits
+      ? dataStationsAirQualityUnits
       : {};
 
   const { data: dataStations, error: errorStations } = useSWR(
@@ -101,20 +112,24 @@ const MapContent = () => {
           <StationsContext.Provider value={stations}>
             <StationsAirQualityContext.Provider value={stationsAirQuality}>
               <IcaStationsAirQualityContext.Provider value={icaStations}>
-                <MapContainer
-                  center={position}
-                  zoom={zoom}
-                  tapTolerance={500}
-                  whenCreated={setMap}
+                <IcaStationsUnitsContext.Provider
+                  value={stationsAirQualityUnits}
                 >
-                  <LayersControl>
-                    <BaseLayers baseLayerData={baseLayersData} />
-                    <StationsLayer />
-                  </LayersControl>
-                  <LocateControl />
-                  <LegendControl />
-                  <StationPanel />
-                </MapContainer>
+                  <MapContainer
+                    center={position}
+                    zoom={zoom}
+                    tapTolerance={500}
+                    whenCreated={setMap}
+                  >
+                    <LayersControl>
+                      <BaseLayers baseLayerData={baseLayersData} />
+                      <StationsLayer />
+                    </LayersControl>
+                    <LocateControl />
+                    <LegendControl />
+                    <StationPanel />
+                  </MapContainer>
+                </IcaStationsUnitsContext.Provider>
               </IcaStationsAirQualityContext.Provider>
             </StationsAirQualityContext.Provider>
           </StationsContext.Provider>

@@ -1,7 +1,7 @@
 from posixpath import basename
 from django.urls import re_path, path
 from rest_framework.routers import DefaultRouter
-from .views import EstacionesViewSet, EstacionesAireViewSet, EstacionesAireSerieTiempo, EstacionesAireMetadata, EstacionesAireICAEstaciones
+from .views import EstacionesViewSet, EstacionesAireViewSet, EstacionesAireSerieTiempo, EstacionesAireMetadata, EstacionesAireICAEstaciones, EstacionesAireUnidades
 
 router = DefaultRouter()
 
@@ -10,6 +10,7 @@ router.register(prefix = 'api/v1/estaciones_aire', viewset = EstacionesAireViewS
 # router.register('api/v1/estaciones_aire/serie_tiempo', EstacionesAireSerieTiempo, basename = 'serie_tiempo')
 urls = [path(r'api/v1/estaciones_aire/serie_tiempo', EstacionesAireSerieTiempo),
         path(r'api/v1/estaciones_aire/metadata', EstacionesAireMetadata),
-        path(r'api/v1/estaciones_aire/ica_estaciones', EstacionesAireICAEstaciones),]
+        path(r'api/v1/estaciones_aire/ica_estaciones', EstacionesAireICAEstaciones),
+        path(r'api/v1/estaciones_aire/aire_unidades', EstacionesAireUnidades),]
 
 urlpatterns = router.urls + urls

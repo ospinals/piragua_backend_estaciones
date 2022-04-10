@@ -15,7 +15,7 @@ from django.core.serializers import serialize
 import pandas as pd
 
 from .models import Estaciones, EstacionesAire, SerieTiempo, MetadataEstacionesAire, ICAEstaciones
-from .serializers import ICAEstacionesSerializer, EstacionesSerializer, EstacionesAireSerializer, SerieTiempoSerializer, MetadataEstacionesAireSerializer
+from .serializers import ICAEstacionesSerializer, EstacionesSerializer, EstacionesAireSerializer, SerieTiempoSerializer, MetadataEstacionesAireSerializer, ICAEstacionesUnidadesSerializer
 
 # ## CONSTANTS ####################################################################################################### #
 
@@ -97,7 +97,7 @@ def EstacionesAireICAEstaciones(request):
     fecha = pd.to_datetime(request.GET.get('fecha').replace("T", " ")).strftime("%Y-%m-%d %H:00:00")
 
     query = f"""
-            WITH metadata AS (SELECT codigo, longitud, latitud, ubicacion, parametro_instrumentacion_id, parametros_estacion_aire.id AS estacion_id, nombre, limite_norma 
+            WITH metadata AS (SELECT codigo, parametro_instrumentacion_id, parametros_estacion_aire.id AS estacion_id, nombre 
             FROM parametros_estacion_aire 
             INNER JOIN
             Parametros_instrumentacion
@@ -135,6 +135,40 @@ def EstacionesAireICAEstaciones(request):
 
     return JsonResponse(dic, safe = False)
 
+@api_view(['GET'])
+def EstacionesAireUnidades(request):            
+
+
+    query = f"""
+            WITH metadata AS (SELECT codigo, nombre, unidad 
+            FROM parametros_estacion_aire 
+            INNER JOIN
+            Parametros_instrumentacion
+            ON Parametros_instrumentacion.id = parametros_estacion_aire.parametro_instrumentacion_id
+            INNER JOIN
+            estaciones_aire
+            ON estaciones_aire.id = parametros_estacion_aire.estacion_aire_id
+            WHERE 
+            estacion_aire_id IN (SELECT id FROM estaciones_aire))
+            SELECT 1 as id, codigo, nombre as variable, unidad
+            FROM metadata
+        """
+
+
+
+    queryset = ICAEstaciones.objects.raw(query)
+
+    
+    json = ICAEstacionesUnidadesSerializer(queryset, many = True).data
+
+    dic = {}
+    for i in json:
+        dic[i["codigo"]] = {}
+
+    for i in json:
+        dic[i["codigo"]][i["variable"]] = i["unidad"]
+
+    return JsonResponse(dic, safe = False)
 
 @api_view(['GET'])
 def EstacionesAireMetadata(request):            

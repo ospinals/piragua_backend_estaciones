@@ -50,6 +50,12 @@ class ICAEstacionesSerializer(ModelSerializer):
         model = ICAEstaciones
         fields = ["valor", "variable", "codigo"]
 
+class ICAEstacionesUnidadesSerializer(ModelSerializer):
+
+    class Meta:
+        model = ICAEstaciones
+        fields = ["unidad", "variable", "codigo"]
+
 
 class MetadataEstacionesAireSerializer(GeoFeatureModelSerializer):
 
