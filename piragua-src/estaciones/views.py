@@ -65,26 +65,40 @@ def EstacionesAireSerieTiempo(request):
     codigo = request.GET.get('codigo')
     fecha_inicial = request.GET.get('fecha_inicial').replace("T", " ")
     fecha_final = request.GET.get('fecha_final').replace("T", " ")
+    variable = request.GET.get('variable')
 
-    query = f"""
-        WITH
-        codigo AS (SELECT ), 
-        SELECT 1 as id, fecha, muestra as valor 
-        FROM calidades_aire 
-        WHERE 
-        parametro_estacion_id in (
-            SELECT id FROM parametros_estacion_aire 
-            WHERE estacion_aire_id IN (
-                SELECT id FROM estaciones_aire
-                WHERE codigo = '%s'))
-        AND 
-        calidad = 1 
-        AND 
-        fecha BETWEEN '%s' AND '%s'
-        """
+    query = """WITH metadata AS (SELECT codigo, longitud, latitud, ubicacion, parametro_instrumentacion_id, parametros_estacion_aire.id AS estacion_id, nombre, limite_norma 
+            FROM parametros_estacion_aire 
+            INNER JOIN
+            Parametros_instrumentacion
+            ON Parametros_instrumentacion.id = parametros_estacion_aire.parametro_instrumentacion_id
+            INNER JOIN
+            estaciones_aire
+            ON estaciones_aire.id = parametros_estacion_aire.estacion_aire_id
+            WHERE 
+            estacion_aire_id IN (SELECT id FROM estaciones_aire)),
+
+            datos AS (select muestra AS valor, fecha, parametro_estacion_id
+            FROM calidades_aire
+            WHERE parametro_estacion_id in (
+                        SELECT id FROM parametros_estacion_aire 
+                        WHERE estacion_aire_id IN (
+                            SELECT id FROM estaciones_aire
+                            WHERE codigo = %s))
+
+            AND calidad = 1 
+            AND fecha BETWEEN %s AND %s)
+
+            SELECT 1 AS id, valor, fecha
+            FROM datos
+            INNER JOIN metadata
+            ON metadata.estacion_id = datos.parametro_estacion_id
+            WHERE nombre = %s
+
+            """
 
 
-    queryset = SerieTiempo.objects.raw(query, [codigo, fecha_inicial, fecha_final])
+    queryset = SerieTiempo.objects.raw(query, [codigo, fecha_inicial, fecha_final, variable])
     
     json = SerieTiempoSerializer(queryset, many = True).data
 

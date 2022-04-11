@@ -41,7 +41,7 @@ class SerieTiempoSerializer(ModelSerializer):
 
     class Meta:
         model = SerieTiempo
-        fields = ["fecha", "valor", "variable"]
+        fields = ["fecha", "valor"]
 
 
 class ICAEstacionesSerializer(ModelSerializer):

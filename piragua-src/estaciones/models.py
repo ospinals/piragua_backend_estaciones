@@ -1218,7 +1218,7 @@ class SerieTiempo(models.Model):
     id = models.AutoField(primary_key=True)
     fecha = models.DateTimeField(blank=True, null=True)
     valor = models.FloatField()
-    variable = models.CharField(max_length=255)
+    # variable = models.CharField(max_length=255)
 
     class Meta:
         managed = False

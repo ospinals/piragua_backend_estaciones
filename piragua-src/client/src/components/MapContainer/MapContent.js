@@ -143,7 +143,7 @@ const MapContent = () => {
                         <LocateControl />
                         <LegendControl />
                         <StationPanel />
-                        <PlotsPanel />
+                        {activeStation && <PlotsPanel />}
                       </MapContainer>
                     </IcaStationsUnitsContext.Provider>
                   </IcaStationsAirQualityContext.Provider>
