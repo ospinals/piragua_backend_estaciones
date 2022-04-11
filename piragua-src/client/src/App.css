@@ -104,7 +104,7 @@
 
 .station-panel-control {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 2fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr;
   gap: 2px 10px;
   grid-auto-flow: row;
@@ -112,7 +112,7 @@
     "dropdown-station . . close-button"
     "station-panel-icon station-panel-value station-panel-variable ."
     "station-panel-icon station-panel-value station-panel-units ."
-    ". . . plot-button";
+    "station-panel-name . . plot-button";
   background-color: #fff;
   /* bottom: ; */
   bottom: 12% !important;
@@ -157,16 +157,28 @@
   height: 70%;
 }
 
+.station-panel-name {
+  justify-self: start;
+  align-self: end;
+  grid-area: station-panel-name;
+  color: #000;
+  font-size: 100%;
+  width: 300%;
+  position: absolute !important;
+  bottom: 12%;
+  left: 20%;
+}
+
 .plot-button {
   justify-self: end;
   align-self: end;
   grid-area: plot-button;
   position: absolute !important;
-  right: 8px !important;
+  right: 0px !important;
   bottom: 10px !important;
   z-index: 1002 !important;
   font-size: x-small !important;
-  width: 100%;
+  width: 150%;
 }
 
 .close-button {
@@ -192,8 +204,9 @@
   align-self: start;
   grid-area: station-panel-units;
   color: #6394cf;
-  font-size: 200%;
+  font-size: 150%;
   height: 60%;
+  width: 200%;
 }
 
 .green {
@@ -245,16 +258,45 @@
   border-color: #305ea0;
   border-radius: 25px;
   border-style: solid;
+  width: 120%;
 }
 
 .station-panel-icon-props {
-  width: auto;
-  height: auto;
   z-index: 1001;
   height: 30%;
-  width: auto;
-  left: 4%;
+  width: 20%;
+  left: 10%;
   bottom: 20%;
   top: 35%;
   position: absolute;
+}
+
+.plots-panel-control {
+  background-color: #fff;
+  /* bottom: ; */
+  bottom: 12% !important;
+  height: 60% !important;
+  left: 6% !important;
+  right: 6% !important;
+  width: auto;
+  z-index: 1002 !important;
+  border-radius: 20px !important;
+  border-color: #ddd;
+  border-width: 1px;
+  border-style: solid;
+  position: absolute !important;
+}
+
+.plot-panel-title {
+  justify-self: center;
+  align-self: start;
+  color: #000;
+  font-size: 150%;
+  width: 100%;
+  position: absolute !important;
+  top: 2%;
+  /* left: 20%;
+  right: 20%; */
+  color: #6394cf;
+  text-align: center;
 }

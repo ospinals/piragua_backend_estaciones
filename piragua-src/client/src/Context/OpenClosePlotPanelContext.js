@@ -4,4 +4,4 @@ const OpenClosePlotPanelContext = createContext({
   openClosePlotPanel: false,
   changeOpenClosePlotPanel: () => {},
 });
-export default OpenCloseStationPanelContext;
+export default OpenClosePlotPanelContext;

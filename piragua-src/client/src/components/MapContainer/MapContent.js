@@ -11,6 +11,7 @@ import StationsLayer from "../PointLayers/StationsLayer";
 import LocateControl from "./LocateControl";
 import StationPanel from "../Panels/StationPanel";
 import LegendControl from "./LegendControl";
+import PlotsPanel from "../Panels/PlotsPanel";
 
 import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
 import ActiveStationContext from "../../Context/ActiveStationContext";
@@ -19,6 +20,8 @@ import MapContext from "../../Context/MapContext";
 import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelContext";
 import IcaStationsAirQualityContext from "../../Context/IcaStationsAirQualityContext";
 import IcaStationsUnitsContext from "../../Context/IcaStationsUnitsContext";
+import AirQualityTimeSeriesContext from "../../Context/AirQualityTimeSeriesContext";
+import OpenClosePlotPanelContext from "../../Context/OpenClosePlotPanelContext";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -30,8 +33,14 @@ const MapContent = () => {
   const [activeStation, setActiveStation] = useState(null);
   const changeActiveStation = (x) => setActiveStation(x);
 
+  const [airQualityTimeSeries, setAirQualityTimeSeries] = useState(null);
+  const changeAirQualityTimeSeries = (x) => setAirQualityTimeSeries(x);
+
   const [openCloseStationPanel, setOpenCloseStationPanel] = useState(false);
   const changeOpenCloseStationPanel = (x) => setOpenCloseStationPanel(x);
+
+  const [openClosePlotPanel, setOpenClosePlotPanel] = useState(false);
+  const changeOpenClosePlotPanel = (x) => setOpenClosePlotPanel(x);
 
   /// Get Datetime to know when to fetch data again and re render the app
   const [state, setState] = useState({ num: 0 });
@@ -109,30 +118,39 @@ const MapContent = () => {
         <OpenCloseStationPanelContext.Provider
           value={{ openCloseStationPanel, changeOpenCloseStationPanel }}
         >
-          <StationsContext.Provider value={stations}>
-            <StationsAirQualityContext.Provider value={stationsAirQuality}>
-              <IcaStationsAirQualityContext.Provider value={icaStations}>
-                <IcaStationsUnitsContext.Provider
-                  value={stationsAirQualityUnits}
+          <OpenClosePlotPanelContext.Provider
+            value={{ openClosePlotPanel, changeOpenClosePlotPanel }}
+          >
+            <StationsContext.Provider value={stations}>
+              <StationsAirQualityContext.Provider value={stationsAirQuality}>
+                <AirQualityTimeSeriesContext.Provider
+                  value={{ airQualityTimeSeries, changeAirQualityTimeSeries }}
                 >
-                  <MapContainer
-                    center={position}
-                    zoom={zoom}
-                    tapTolerance={500}
-                    whenCreated={setMap}
-                  >
-                    <LayersControl>
-                      <BaseLayers baseLayerData={baseLayersData} />
-                      <StationsLayer />
-                    </LayersControl>
-                    <LocateControl />
-                    <LegendControl />
-                    <StationPanel />
-                  </MapContainer>
-                </IcaStationsUnitsContext.Provider>
-              </IcaStationsAirQualityContext.Provider>
-            </StationsAirQualityContext.Provider>
-          </StationsContext.Provider>
+                  <IcaStationsAirQualityContext.Provider value={icaStations}>
+                    <IcaStationsUnitsContext.Provider
+                      value={stationsAirQualityUnits}
+                    >
+                      <MapContainer
+                        center={position}
+                        zoom={zoom}
+                        // tapTolerance={100}
+                        whenCreated={setMap}
+                      >
+                        <LayersControl>
+                          <BaseLayers baseLayerData={baseLayersData} />
+                          <StationsLayer />
+                        </LayersControl>
+                        <LocateControl />
+                        <LegendControl />
+                        <StationPanel />
+                        <PlotsPanel />
+                      </MapContainer>
+                    </IcaStationsUnitsContext.Provider>
+                  </IcaStationsAirQualityContext.Provider>
+                </AirQualityTimeSeriesContext.Provider>
+              </StationsAirQualityContext.Provider>
+            </StationsContext.Provider>
+          </OpenClosePlotPanelContext.Provider>
         </OpenCloseStationPanelContext.Provider>
       </ActiveStationContext.Provider>
     </MapContext.Provider>

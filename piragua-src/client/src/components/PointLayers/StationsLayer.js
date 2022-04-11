@@ -139,11 +139,17 @@ const StationsLayer = () => {
                   },
                 }}
                 icon={
-                  IconsAirQuality[
-                    evaluateIca(
-                      icaStations[station.properties.codigo]["PM 2.5"]
-                    )
-                  ]
+                  icaStations[station.properties.codigo]["PM 2.5"] !== undefined
+                    ? IconsAirQuality[
+                        evaluateIca(
+                          icaStations[station.properties.codigo]["PM 2.5"]
+                        )
+                      ]
+                    : IconsAirQuality[
+                        evaluateIca(
+                          icaStations[station.properties.codigo]["PM 10"]
+                        )
+                      ]
                 }
               >
                 {/* <Popup

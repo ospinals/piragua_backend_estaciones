@@ -3,69 +3,15 @@ import { useContext, useState } from "react";
 
 import "leaflet/dist/leaflet.css";
 import "../../App.css";
-import MapContext from "../../Context/MapContext";
 import ActiveStationContext from "../../Context/ActiveStationContext";
 import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelContext";
 import IcaStationsAirQualityContext from "../../Context/IcaStationsAirQualityContext";
-import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
 import IcaStationsUnitsContext from "../../Context/IcaStationsUnitsContext";
+import OpenClosePlotPanelContext from "../../Context/OpenClosePlotPanelContext";
 import Dropdown from "react-bootstrap/Dropdown";
 import { CloseButton, Button } from "react-bootstrap";
-import { Icon } from "leaflet";
-
-export const iconAirQualityNoData = new Icon({
-  iconUrl: "iconos-aire/azul.svg",
-  iconSize: [48, 48],
-  popupAnchor: [0, -26],
-});
-
-export const iconAirQualityGood = new Icon({
-  iconUrl: "iconos-aire/verde.svg",
-  iconSize: [48, 48],
-  popupAnchor: [0, -26],
-});
-
-export const iconAirQualityAcceptable = new Icon({
-  iconUrl: "iconos-aire/amarillo.svg",
-  iconSize: [48, 48],
-  popupAnchor: [0, -26],
-});
-
-export const iconAirQualityHarmSensible = new Icon({
-  iconUrl: "iconos-aire/naranja.svg",
-  iconSize: [48, 48],
-  popupAnchor: [0, -26],
-});
-
-export const iconAirQualityHarm = new Icon({
-  iconUrl: "iconos-aire/rojo.svg",
-  iconSize: [48, 48],
-  popupAnchor: [0, -26],
-});
-
-export const iconAirQualityVeryHarm = new Icon({
-  iconUrl: "iconos-aire/morado.svg",
-  iconSize: [48, 48],
-  popupAnchor: [0, -26],
-});
-
-export const iconAirQualityDangerous = new Icon({
-  iconUrl: "iconos-aire/marron.svg",
-  iconSize: [48, 48],
-  popupAnchor: [0, -26],
-});
-
-export const icon = new Icon({
-  iconUrl: "iconos-aire/verde.svg",
-  // shadowUrl: "leaf-shadow.png",
-  iconSize: [48, 48],
-  // iconAnchor: [22, 94],
-  popupAnchor: [0, -26],
-});
 
 const StationPanel = () => {
-  const map = useContext(MapContext);
-  const stationsAirQuality = useContext(StationsAirQualityContext);
   const icaStations = useContext(IcaStationsAirQualityContext);
   const icaUnits = useContext(IcaStationsUnitsContext);
 
@@ -75,6 +21,11 @@ const StationPanel = () => {
   const { openCloseStationPanel, changeOpenCloseStationPanel } = useContext(
     OpenCloseStationPanelContext
   );
+
+  const { openClosePlotPanel, changeOpenClosePlotPanel } = useContext(
+    OpenClosePlotPanelContext
+  );
+
   const [dropDownSelection, setDropDownSelection] = useState("24h");
 
   const handleSelect = (e) => {
@@ -87,7 +38,7 @@ const StationPanel = () => {
   };
 
   const handleClickPlot = (e) => {
-    console.log("clic");
+    changeOpenClosePlotPanel(true);
   };
 
   const replaceNaN = (x) => {
@@ -186,8 +137,6 @@ const StationPanel = () => {
     }
   );
 
-  console.log(icaUnits);
-
   return (
     <>
       <div
@@ -222,9 +171,13 @@ const StationPanel = () => {
           <img
             src={
               icaStations && activeStation
-                ? IconsAirQuality[
-                    evaluateIca(icaStations[activeStation]["PM 2.5"])
-                  ]
+                ? icaStations[activeStation]["PM 2.5"] !== undefined
+                  ? IconsAirQuality[
+                      evaluateIca(icaStations[activeStation]["PM 2.5"])
+                    ]
+                  : IconsAirQuality[
+                      evaluateIca(icaStations[activeStation]["PM 10"])
+                    ]
                 : null
             }
             alt=""
@@ -234,17 +187,26 @@ const StationPanel = () => {
         <div
           className={
             icaStations && activeStation
-              ? "station-panel-variable " +
-                AirQualityColor[
-                  evaluateIca(icaStations[activeStation]["PM 2.5"])
-                ]
+              ? icaStations[activeStation]["PM 2.5"] !== undefined
+                ? "station-panel-variable " +
+                  AirQualityColor[
+                    evaluateIca(icaStations[activeStation]["PM 2.5"])
+                  ]
+                : "station-panel-variable " +
+                  AirQualityColor[
+                    evaluateIca(icaStations[activeStation]["PM 10"])
+                  ]
               : "station-panel-variable"
           }
         >
           {icaStations && activeStation
-            ? AirQualityEvaluation[
-                evaluateIca(icaStations[activeStation]["PM 2.5"])
-              ]
+            ? icaStations[activeStation]["PM 2.5"] !== undefined
+              ? AirQualityEvaluation[
+                  evaluateIca(icaStations[activeStation]["PM 2.5"])
+                ]
+              : AirQualityEvaluation[
+                  evaluateIca(icaStations[activeStation]["PM 10"])
+                ]
             : null}
         </div>
         <div className="plot-button">
@@ -262,16 +224,25 @@ const StationPanel = () => {
             VER DATOS
           </Button>
         </div>
+        <div className="station-panel-name">
+          {activeStation ? `Estación: ${String(activeStation)}` : null}
+        </div>
         <div className="close-button">
           <CloseButton onClick={handleClick} />
         </div>
         <div className="station-panel-value">
           {icaStations && activeStation
-            ? replaceNaN(parseInt(icaStations[activeStation]["PM 2.5"]))
+            ? icaStations[activeStation]["PM 2.5"] !== undefined
+              ? replaceNaN(parseInt(icaStations[activeStation]["PM 2.5"]))
+              : replaceNaN(parseInt(icaStations[activeStation]["PM 10"]))
             : null}
         </div>
         <div className="station-panel-units">
-          {icaUnits && activeStation ? icaUnits[activeStation]["PM 2.5"] : null}
+          {icaUnits && activeStation
+            ? icaUnits[activeStation]["PM 2.5"] !== undefined
+              ? icaUnits[activeStation]["PM 2.5"] + " PM2.5"
+              : icaUnits[activeStation]["PM 10"] + " PM10"
+            : null}
         </div>
       </div>
     </>

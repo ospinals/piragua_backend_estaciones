@@ -76,15 +76,15 @@ def EstacionesAireSerieTiempo(request):
             SELECT id FROM parametros_estacion_aire 
             WHERE estacion_aire_id IN (
                 SELECT id FROM estaciones_aire
-                WHERE codigo = '{codigo}'))
+                WHERE codigo = '%s'))
         AND 
         calidad = 1 
         AND 
-        fecha BETWEEN '{fecha_inicial}' AND '{fecha_final}'
+        fecha BETWEEN '%s' AND '%s'
         """
 
 
-    queryset = SerieTiempo.objects.raw(query)#, [codigo, fecha_inicial, fecha_final])
+    queryset = SerieTiempo.objects.raw(query, [codigo, fecha_inicial, fecha_final])
     
     json = SerieTiempoSerializer(queryset, many = True).data
 
@@ -113,7 +113,13 @@ def EstacionesAireICAEstaciones(request):
             WHERE calidad = 1 
             AND fecha = %s)
 
-            SELECT 1 as id, codigo, valor, nombre as variable
+            SELECT 1 as id, codigo, 
+            CASE 
+                WHEN valor < 1 THEN null
+                ELSE valor
+            END
+            AS valor,
+            nombre as variable
             FROM datos
             FULL JOIN metadata
             ON metadata.estacion_id = datos.parametro_estacion_id
