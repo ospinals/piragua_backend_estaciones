@@ -29,8 +29,17 @@ const PlotsPanel = () => {
     changeOpenClosePlotPanel(false);
   };
 
-  const final_date = Date().toISOString(); //"2021-09-01T11:53:00";
-  const initial_date = final_date.toISOString();
+  var today = new Date(),
+    date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+
+  const final_date = date; //"2021-09-01T11:53:00";
+  console.log(final_date);
+  const initial_date = format(final_date, "YYYY");
 
   console.log(initial_date, final_date);
   //   const { data: dataTimeSeries, error: errorTimeSeries } = useSWR(
