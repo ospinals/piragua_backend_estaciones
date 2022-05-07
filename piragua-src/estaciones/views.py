@@ -193,7 +193,7 @@ def EstacionesAireUnidades(request):
 @api_view(['GET'])
 def EstacionesAireMetadata(request):            
 
-    query = """SELECT 1 as id, codigo, longitud, latitud, ubicacion, parametro_instrumentacion_id, nombre, limite_norma 
+    query = """SELECT 1 as id, estaciones_aire.codigo, estaciones_aire.longitud, estaciones_aire.latitud, estaciones_aire.ubicacion, parametro_instrumentacion_id, Parametros_instrumentacion.nombre, limite_norma, municipios.nombre as municipio
             FROM parametros_estacion_aire 
             INNER JOIN
             Parametros_instrumentacion
@@ -201,6 +201,9 @@ def EstacionesAireMetadata(request):
             INNER JOIN
             estaciones_aire
             ON estaciones_aire.id = parametros_estacion_aire.estacion_aire_id
+            INNER JOIN
+            municipios
+            ON estaciones_aire.municipio_id = municipios.id
             WHERE 
             estacion_aire_id IN (SELECT id FROM estaciones_aire)"""
 
@@ -209,8 +212,11 @@ def EstacionesAireMetadata(request):
     
     json = MetadataEstacionesAireSerializer(queryset, many = True).data
 
-    return JsonResponse(json, safe = False)
+    dic = {}
+    for i in json["features"]:
+        dic[i["properties"]["codigo"]] = i["properties"]
 
+    return JsonResponse(dic, safe = False)
 
 
 

@@ -78,25 +78,47 @@ const StationsLayer = () => {
     VeryHarm: iconAirQualityVeryHarm,
   };
 
-  const evaluateIca = (x) => {
+  const evaluateIcaPM25 = (x) => {
     let evaluation = null;
     if (x === null || x === undefined) {
       evaluation = "NoData";
-    } else if (x < 20) {
+    } else if (x <= 12) {
       evaluation = "Good";
-    } else if (x < 37) {
+    } else if (x <= 37) {
       evaluation = "Acceptable";
-    } else if (x < 60) {
+    } else if (x <= 55) {
       evaluation = "HarmSensible";
-    } else if (x < 80) {
+    } else if (x <= 150) {
       evaluation = "Harm";
-    } else if (x < 100) {
+    } else if (x <= 250) {
       evaluation = "VeryHarm";
     } else {
       evaluation = "Dangerous";
     }
     return evaluation;
   };
+
+  const evaluateIcaPM10 = (x) => {
+    let evaluation = null;
+    if (x === null || x === undefined) {
+      evaluation = "NoData";
+    } else if (x <= 54) {
+      evaluation = "Good";
+    } else if (x <= 154) {
+      evaluation = "Acceptable";
+    } else if (x <= 254) {
+      evaluation = "HarmSensible";
+    } else if (x <= 354) {
+      evaluation = "Harm";
+    } else if (x <= 424) {
+      evaluation = "VeryHarm";
+    } else {
+      evaluation = "Dangerous";
+    }
+    return evaluation;
+  };
+
+  const evaluateIca = { "PM 2.5": evaluateIcaPM25, "PM 10": evaluateIcaPM10 };
 
   const createClusterCustomIcon = function (cluster) {
     return L.divIcon({
@@ -141,12 +163,12 @@ const StationsLayer = () => {
                 icon={
                   icaStations[station.properties.codigo]["PM 2.5"] !== undefined
                     ? IconsAirQuality[
-                        evaluateIca(
+                        evaluateIca["PM 2.5"](
                           icaStations[station.properties.codigo]["PM 2.5"]
                         )
                       ]
                     : IconsAirQuality[
-                        evaluateIca(
+                        evaluateIca["PM 10"](
                           icaStations[station.properties.codigo]["PM 10"]
                         )
                       ]

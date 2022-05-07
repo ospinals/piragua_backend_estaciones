@@ -22,6 +22,7 @@ import IcaStationsAirQualityContext from "../../Context/IcaStationsAirQualityCon
 import IcaStationsUnitsContext from "../../Context/IcaStationsUnitsContext";
 import AirQualityTimeSeriesContext from "../../Context/AirQualityTimeSeriesContext";
 import OpenClosePlotPanelContext from "../../Context/OpenClosePlotPanelContext";
+import StationsAirQualityMetaDataContext from "../../Context/StationsAirQualityMetaDataContext";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -65,6 +66,16 @@ const MapContent = () => {
       : {};
 
   const {
+    data: dataStationsAirQualityMetaData,
+    error: errorStationsAirQualityMetaData,
+  } = useSWR("/api/v1/estaciones_aire/metadata", fetcher);
+
+  const stationsAirQualityMetaData =
+    dataStationsAirQualityMetaData && !errorStationsAirQualityMetaData
+      ? dataStationsAirQualityMetaData
+      : {};
+
+  const {
     data: dataStationsAirQualityUnits,
     error: errorStationsAirQualityUnits,
   } = useSWR("/api/v1/estaciones_aire/aire_unidades", fetcher);
@@ -82,12 +93,14 @@ const MapContent = () => {
   const stations = dataStations && !errorStations ? dataStations : {};
 
   const { data: dataIcaStations, error: errorIcaStations } = useSWR(
-    "/api/v1/estaciones_aire/ica_estaciones?fecha=2021-09-01T11:53:00",
+    "/api/v1/estaciones_aire/ica_estaciones?fecha=2021-09-01T09:53:00",
     fetcher
   );
 
   const icaStations =
     dataIcaStations && !errorIcaStations ? dataIcaStations : {};
+
+  // Pluvio
 
   if (errorStationsAirQuality || errorStations || errorIcaStations) {
     return <Alert variant="danger">There is a problem</Alert>;
@@ -109,6 +122,8 @@ const MapContent = () => {
     );
   }
 
+  console.log(stationsAirQualityMetaData);
+
   //// Main Render of map content
   return (
     <MapContext.Provider value={map}>
@@ -121,35 +136,39 @@ const MapContent = () => {
           <OpenClosePlotPanelContext.Provider
             value={{ openClosePlotPanel, changeOpenClosePlotPanel }}
           >
-            <StationsContext.Provider value={stations}>
-              <StationsAirQualityContext.Provider value={stationsAirQuality}>
-                <AirQualityTimeSeriesContext.Provider
-                  value={{ airQualityTimeSeries, changeAirQualityTimeSeries }}
-                >
-                  <IcaStationsAirQualityContext.Provider value={icaStations}>
-                    <IcaStationsUnitsContext.Provider
-                      value={stationsAirQualityUnits}
-                    >
-                      <MapContainer
-                        center={position}
-                        zoom={zoom}
-                        // tapTolerance={100}
-                        whenCreated={setMap}
+            <StationsAirQualityMetaDataContext.Provider
+              value={stationsAirQualityMetaData}
+            >
+              <StationsContext.Provider value={stations}>
+                <StationsAirQualityContext.Provider value={stationsAirQuality}>
+                  <AirQualityTimeSeriesContext.Provider
+                    value={{ airQualityTimeSeries, changeAirQualityTimeSeries }}
+                  >
+                    <IcaStationsAirQualityContext.Provider value={icaStations}>
+                      <IcaStationsUnitsContext.Provider
+                        value={stationsAirQualityUnits}
                       >
-                        <LayersControl>
-                          <BaseLayers baseLayerData={baseLayersData} />
-                          <StationsLayer />
-                        </LayersControl>
-                        <LocateControl />
-                        <LegendControl />
-                        <StationPanel />
-                        {activeStation && <PlotsPanel />}
-                      </MapContainer>
-                    </IcaStationsUnitsContext.Provider>
-                  </IcaStationsAirQualityContext.Provider>
-                </AirQualityTimeSeriesContext.Provider>
-              </StationsAirQualityContext.Provider>
-            </StationsContext.Provider>
+                        <MapContainer
+                          center={position}
+                          zoom={zoom}
+                          // tapTolerance={100}
+                          whenCreated={setMap}
+                        >
+                          <LayersControl>
+                            <BaseLayers baseLayerData={baseLayersData} />
+                            <StationsLayer />
+                          </LayersControl>
+                          <LocateControl />
+                          <LegendControl />
+                          <StationPanel />
+                          {activeStation && <PlotsPanel />}
+                        </MapContainer>
+                      </IcaStationsUnitsContext.Provider>
+                    </IcaStationsAirQualityContext.Provider>
+                  </AirQualityTimeSeriesContext.Provider>
+                </StationsAirQualityContext.Provider>
+              </StationsContext.Provider>
+            </StationsAirQualityMetaDataContext.Provider>
           </OpenClosePlotPanelContext.Provider>
         </OpenCloseStationPanelContext.Provider>
       </ActiveStationContext.Provider>

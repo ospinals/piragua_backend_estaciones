@@ -67,7 +67,7 @@ class MetadataEstacionesAireSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = MetadataEstacionesAire
         geo_field = "point"
-        fields = ["codigo", "latitud", "longitud", "ubicacion", "parametro_instrumentacion_id", "nombre", "limite_norma", "point"]
+        fields = ["codigo", "latitud", "longitud", "ubicacion", "parametro_instrumentacion_id", "nombre", "limite_norma", "point", "municipio"]
 
 
 

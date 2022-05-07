@@ -1253,6 +1253,7 @@ class MetadataEstacionesAire(models.Model):
     parametro_instrumentacion_id = models.IntegerField()
     nombre = models.CharField(max_length=255)
     limite_norma = models.CharField(max_length=255)
+    municipio = models.CharField(max_length=255)
 
 
 
