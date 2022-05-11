@@ -30,7 +30,17 @@ const LocateControl = () => {
     <>
       <div className="leaflet-top leaflet-right location-control">
         <div className="leaflet-control-layers leaflet-control">
-          <button className="btn btn-primary" onClick={showMyLocation}>
+          <button
+            className="btn btn-primary"
+            onClick={showMyLocation}
+            style={{
+              borderColor: "#6394CF",
+              backgroundColor: "#6394CF",
+              fontSize: "100%",
+              boxSizing: "border-box",
+              width: "100%",
+            }}
+          >
             <MdGpsFixed />
           </button>
         </div>

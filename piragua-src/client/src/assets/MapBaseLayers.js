@@ -16,7 +16,7 @@ export const baseLayersData = [
     maxNativeZoom: false,
   },
   {
-    url: "https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default//EPSG3857_500m/{z}/{y}/{x}.jpeg",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution: "&copy; NASA Blue Marble, image service by OpenGeo",
     name: "Satelital",
     checked: false,

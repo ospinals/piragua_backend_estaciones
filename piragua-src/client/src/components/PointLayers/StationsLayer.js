@@ -12,54 +12,53 @@ import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
 import ActiveStationContext from "../../Context/ActiveStationContext";
 import StationsContext from "../../Context/StationsContext";
 import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelContext";
-import IcaStationsAirQualityContext from "../../Context/IcaStationsAirQualityContext";
 
 export const iconAirQualityNoData = new Icon({
   iconUrl: "iconos-aire/azul.svg",
-  iconSize: [48, 48],
+  iconSize: [40, 40],
   popupAnchor: [0, -26],
 });
 
 export const iconAirQualityGood = new Icon({
   iconUrl: "iconos-aire/verde.svg",
-  iconSize: [48, 48],
+  iconSize: [40, 40],
   popupAnchor: [0, -26],
 });
 
 export const iconAirQualityAcceptable = new Icon({
   iconUrl: "iconos-aire/amarillo.svg",
-  iconSize: [48, 48],
+  iconSize: [40, 40],
   popupAnchor: [0, -26],
 });
 
 export const iconAirQualityHarmSensible = new Icon({
   iconUrl: "iconos-aire/naranja.svg",
-  iconSize: [48, 48],
+  iconSize: [40, 40],
   popupAnchor: [0, -26],
 });
 
 export const iconAirQualityHarm = new Icon({
   iconUrl: "iconos-aire/rojo.svg",
-  iconSize: [48, 48],
+  iconSize: [40, 40],
   popupAnchor: [0, -26],
 });
 
 export const iconAirQualityVeryHarm = new Icon({
   iconUrl: "iconos-aire/morado.svg",
-  iconSize: [48, 48],
+  iconSize: [40, 40],
   popupAnchor: [0, -26],
 });
 
 export const iconAirQualityDangerous = new Icon({
   iconUrl: "iconos-aire/marron.svg",
-  iconSize: [48, 48],
+  iconSize: [40, 40],
   popupAnchor: [0, -26],
 });
 
 export const icon = new Icon({
   iconUrl: "iconos-aire/verde.svg",
   // shadowUrl: "leaf-shadow.png",
-  iconSize: [48, 48],
+  iconSize: [40, 40],
   // iconAnchor: [22, 94],
   popupAnchor: [0, -26],
 });
@@ -70,8 +69,8 @@ const layerName = "Red meteorológica";
 const StationsLayer = () => {
   const IconsAirQuality = {
     NoData: iconAirQualityNoData,
-    Good: iconAirQualityGood,
-    Acceptable: iconAirQualityAcceptable,
+    Buena: iconAirQualityGood,
+    Moderada: iconAirQualityAcceptable,
     Dangerous: iconAirQualityDangerous,
     Harm: iconAirQualityHarm,
     HarmSensible: iconAirQualityHarmSensible,
@@ -130,7 +129,6 @@ const StationsLayer = () => {
   };
 
   const stationsAirQuality = useContext(StationsAirQualityContext);
-  const icaStations = useContext(IcaStationsAirQualityContext);
   const stations = useContext(StationsContext);
   const { activeStation, changeActiveStation } =
     useContext(ActiveStationContext);
@@ -147,48 +145,18 @@ const StationsLayer = () => {
             showCoverageOnHover={false}
             iconCreateFunction={createClusterCustomIcon}
           >
-            {stationsAirQuality.features.map((station) => (
+            {stationsAirQuality["estaciones"].map((station) => (
               <Marker
-                key={station.properties.codigo}
-                position={[
-                  station.geometry.coordinates[1],
-                  station.geometry.coordinates[0],
-                ]}
+                key={station.codigo}
+                position={[station.latitud, station.longitud]}
                 eventHandlers={{
                   click: (e) => {
                     changeOpenCloseStationPanel(true);
-                    changeActiveStation(station.properties.codigo);
+                    changeActiveStation(station.codigo);
                   },
                 }}
-                icon={
-                  icaStations[station.properties.codigo]["PM 2.5"] !== undefined
-                    ? IconsAirQuality[
-                        evaluateIca["PM 2.5"](
-                          icaStations[station.properties.codigo]["PM 2.5"]
-                        )
-                      ]
-                    : IconsAirQuality[
-                        evaluateIca["PM 10"](
-                          icaStations[station.properties.codigo]["PM 10"]
-                        )
-                      ]
-                }
-              >
-                {/* <Popup
-                  position={[
-                    station.geometry.coordinates[1],
-                    station.geometry.coordinates[0],
-                  ]}
-                  onClose={() => {
-                    changeOpenCloseStationPanel(false);
-                    changeActiveStation(null);
-                  }}
-                >
-                  <div>
-                    <h6>{station.properties.codigo}</h6>
-                  </div>
-                </Popup> */}
-              </Marker>
+                icon={IconsAirQuality[station["categoria"]]}
+              ></Marker>
             ))}
           </MarkerClusterGroup>
         </LayerGroup>
@@ -202,10 +170,10 @@ const StationsLayer = () => {
           >
             {stations.features.map((station) => (
               <Marker
-                key={station.properties.codigo}
+                key={station.codigo}
                 position={[
-                  station.geometry.coordinates[1],
-                  station.geometry.coordinates[0],
+                  station.latitud,
+                  station.longitud,
                 ]}
                 onClick={() => {
                   setActiveStation(station);
@@ -214,8 +182,8 @@ const StationsLayer = () => {
               >
                 <Popup
                   position={[
-                    station.geometry.coordinates[1],
-                    station.geometry.coordinates[0],
+                    station.latitud,
+                    station.longitud,
                   ]}
                   onClose={() => {
                     setActiveStation(null);

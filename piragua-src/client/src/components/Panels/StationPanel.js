@@ -1,19 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useContext, useState } from "react";
 
 import "leaflet/dist/leaflet.css";
 import "../../App.css";
 import ActiveStationContext from "../../Context/ActiveStationContext";
 import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelContext";
-import IcaStationsAirQualityContext from "../../Context/IcaStationsAirQualityContext";
-import IcaStationsUnitsContext from "../../Context/IcaStationsUnitsContext";
+import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
+import AirQualityActiveStationParametersContext from "../../Context/AirQualityActiveStationParametersContext";
 import OpenClosePlotPanelContext from "../../Context/OpenClosePlotPanelContext";
 import Dropdown from "react-bootstrap/Dropdown";
+import useSWR from "swr";
+import axios from "axios";
 import { CloseButton, Button } from "react-bootstrap";
+import { IoIosArrowDropdownCircle } from "react-icons/io";
 
 const StationPanel = () => {
-  const icaStations = useContext(IcaStationsAirQualityContext);
-  const icaUnits = useContext(IcaStationsUnitsContext);
+  const fetcher = (url) => axios.get(url).then((res) => res.data);
+  const [dropDownSelectionVariables, setDropDownSelectionVariables] =
+    useState(null);
+
+  function filterValue(obj, key, value) {
+    return obj.find(function (v) {
+      return v[key] === value;
+    });
+  }
+
+  const stationsAirQuality = useContext(StationsAirQualityContext);
+
+  const {
+    airQualityActiveStationParameters,
+    changeAirQualityActiveStationParameters,
+  } = useContext(AirQualityActiveStationParametersContext);
 
   const { activeStation, changeActiveStation } =
     useContext(ActiveStationContext);
@@ -28,8 +45,22 @@ const StationPanel = () => {
 
   const [dropDownSelection, setDropDownSelection] = useState("24h");
 
+  const [activeStationName, setActiveStationName] = useState(null);
+
+  useEffect(() => {
+    setActiveStationName(activeStation);
+  }, [activeStation]);
+
   const handleSelect = (e) => {
     setDropDownSelection(e);
+  };
+
+  const handleVariablesData = (e) => {
+    changeAirQualityActiveStationParameters(e);
+  };
+
+  const handleSelectVariables = (e) => {
+    setDropDownSelectionVariables(e);
   };
 
   const handleClick = (e) => {
@@ -42,15 +73,17 @@ const StationPanel = () => {
   };
 
   const replaceNaN = (x) => {
-    if (isNaN(x)) {
+    if (typeof x === "string") {
+      return x;
+    } else if (isNaN(x)) {
       return "-";
     } else return x;
   };
 
   const IconsAirQuality = {
-    NoData: "/iconos-aire/azul.svg",
-    Good: "/iconos-aire/verde.svg",
-    Acceptable: "/iconos-aire/amarillo.svg",
+    "-": "/iconos-aire/azul.svg",
+    Buena: "/iconos-aire/verde.svg",
+    Moderada: "/iconos-aire/amarillo.svg",
     Dangerous: "/iconos-aire/marron.svg",
     Harm: "/iconos-aire/rojo.svg",
     HarmSensible: "/iconos-aire/naranja.svg",
@@ -58,9 +91,9 @@ const StationPanel = () => {
   };
 
   const AirQualityEvaluation = {
-    NoData: "No Data",
-    Good: "Buena",
-    Acceptable: "Aceptable",
+    "-": "No Data",
+    Buena: "Buena",
+    Moderada: "Aceptable",
     Dangerous: "Peligrosa",
     Harm: "Dañina",
     HarmSensible: "Grupos sensibles",
@@ -68,9 +101,9 @@ const StationPanel = () => {
   };
 
   const AirQualityColor = {
-    NoData: "nodata",
-    Good: "green",
-    Acceptable: "yellow",
+    "-": "nodata",
+    Buena: "green",
+    Moderada: "yellow",
     Dangerous: "brown",
     Harm: "red",
     HarmSensible: "orange",
@@ -82,7 +115,7 @@ const StationPanel = () => {
     if (x === null || x === undefined) {
       evaluation = "NoData";
     } else if (x <= 12) {
-      evaluation = "Good";
+      evaluation = "Buena";
     } else if (x <= 37) {
       evaluation = "Acceptable";
     } else if (x <= 55) {
@@ -102,7 +135,7 @@ const StationPanel = () => {
     if (x === null || x === undefined) {
       evaluation = "NoData";
     } else if (x <= 54) {
-      evaluation = "Good";
+      evaluation = "Buena";
     } else if (x <= 154) {
       evaluation = "Acceptable";
     } else if (x <= 254) {
@@ -117,7 +150,30 @@ const StationPanel = () => {
     return evaluation;
   };
 
-  const evaluateIca = { "PM 2.5": evaluateIcaPM25, "PM 10": evaluateIcaPM10 };
+  // const evaluateIca = { "PM 2.5": evaluateIcaPM25, "PM 10": evaluateIcaPM10 };
+
+  // function {
+  // const {
+  //   data: dataAirQualityActiveStationParameters,
+  //   error: errorAirQualityActiveStationParameters,
+  // } = useSWR(
+  //   activeStation
+  //     ? `https://www.piraguacorantioquia.com.co/api/v1/estaciones-aire/${activeStation}/parametros`
+  //     : null,
+  //   fetcher,
+  //   { suspense: true }
+  // );
+  // }
+
+  // useEffect(() => {
+  //   activeStation && dataAirQualityActiveStationParameters
+  //     ? changeAirQualityActiveStationParameters(
+  //         dataAirQualityActiveStationParameters
+  //       )
+  //     : changeAirQualityActiveStationParameters(null);
+  // }, [activeStation]);
+
+  // console.log(airQualityActiveStationParameters);
 
   // The forwardRef is important!!
   // Dropdown needs access to the DOM node in order to position the Menu
@@ -131,7 +187,7 @@ const StationPanel = () => {
       }}
     >
       {children}
-      &#x25bc;
+      <IoIosArrowDropdownCircle />
     </a>
   ));
 
@@ -159,6 +215,45 @@ const StationPanel = () => {
     }
   );
 
+  function DropDownVariables({ activeStation }) {
+    const { data } = useSWR(
+      `http://192.168.100.123:8000/api/v1/estaciones-aire/${activeStation}/parametros`,
+      fetcher
+    );
+
+    useEffect(() => {
+      handleVariablesData(data);
+    }, [data]);
+
+    return (
+      <>
+        {data ? (
+          <Dropdown itemType="button" onSelect={handleSelectVariables}>
+            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
+              {dropDownSelectionVariables ||
+                data["values"][0]["parametro_nombre"]}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu as={CustomMenu}>
+              {data["values"].map((param, index) => {
+                return (
+                  <Dropdown.Item
+                    eventKey={param["parametro_nombre"]}
+                    key={param["parametro_nombre"]}
+                    active={index === 0 ? true : false}
+                  >
+                    {param["parametro_nombre"]}
+                  </Dropdown.Item>
+                );
+              })}
+            </Dropdown.Menu>
+          </Dropdown>
+        ) : null}
+      </>
+    );
+  }
+  console.log(airQualityActiveStationParameters);
+
   return (
     <>
       <div
@@ -180,7 +275,7 @@ const StationPanel = () => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu as={CustomMenu}>
-              <Dropdown.Item eventKey="24h" active>
+              <Dropdown.Item eventKey="24h" active={true}>
                 Últimas 24 horas
               </Dropdown.Item>
               <Dropdown.Item eventKey="72h">Últimas 72 horas</Dropdown.Item>
@@ -189,19 +284,24 @@ const StationPanel = () => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
+
+        <div className="dropdown-station-variables">
+          <DropDownVariables activeStation={activeStation} />
+        </div>
+
         <div className="station-panel-icon">
           <img
             src={
-              icaStations && activeStation
-                ? icaStations[activeStation]["PM 2.5"] !== undefined
-                  ? IconsAirQuality[
-                      evaluateIca["PM 2.5"](
-                        icaStations[activeStation]["PM 2.5"]
-                      )
-                    ]
-                  : IconsAirQuality[
-                      evaluateIca["PM 10"](icaStations[activeStation]["PM 10"])
-                    ]
+              stationsAirQuality && activeStation
+                ? IconsAirQuality[
+                    replaceNaN(
+                      filterValue(
+                        stationsAirQuality["estaciones"],
+                        "codigo",
+                        activeStation
+                      )["categoria"]
+                    )
+                  ]
                 : null
             }
             alt=""
@@ -210,27 +310,30 @@ const StationPanel = () => {
         </div>
         <div
           className={
-            icaStations && activeStation
-              ? icaStations[activeStation]["PM 2.5"] !== undefined
-                ? "station-panel-variable " +
-                  AirQualityColor[
-                    evaluateIca["PM 2.5"](icaStations[activeStation]["PM 2.5"])
-                  ]
-                : "station-panel-variable " +
-                  AirQualityColor[
-                    evaluateIca["PM 10"](icaStations[activeStation]["PM 10"])
-                  ]
+            stationsAirQuality && activeStation
+              ? "station-panel-variable " +
+                AirQualityColor[
+                  replaceNaN(
+                    filterValue(
+                      stationsAirQuality["estaciones"],
+                      "codigo",
+                      activeStation
+                    )["categoria"]
+                  )
+                ]
               : "station-panel-variable"
           }
         >
-          {icaStations && activeStation
-            ? icaStations[activeStation]["PM 2.5"] !== undefined
-              ? AirQualityEvaluation[
-                  evaluateIca["PM 2.5"](icaStations[activeStation]["PM 2.5"])
-                ]
-              : AirQualityEvaluation[
-                  evaluateIca["PM 10"](icaStations[activeStation]["PM 10"])
-                ]
+          {stationsAirQuality && activeStation
+            ? AirQualityEvaluation[
+                replaceNaN(
+                  filterValue(
+                    stationsAirQuality["estaciones"],
+                    "codigo",
+                    activeStation
+                  )["categoria"]
+                )
+              ]
             : null}
         </div>
         <div className="plot-button">
@@ -240,8 +343,10 @@ const StationPanel = () => {
             style={{
               borderColor: "#6394CF",
               backgroundColor: "#6394CF",
-              fontSize: "x-small",
+              fontSize: "medium",
               boxSizing: "border-box",
+              width: "120%",
+              color: "#fff",
             }}
             onClick={handleClickPlot}
           >
@@ -249,24 +354,31 @@ const StationPanel = () => {
           </Button>
         </div>
         <div className="station-panel-name">
-          {activeStation ? `Estación: ${String(activeStation)}` : null}
+          {activeStation && activeStationName
+            ? `Estación: ${String(activeStationName)}`
+            : null}
         </div>
         <div className="close-button">
           <CloseButton onClick={handleClick} />
         </div>
         <div className="station-panel-value">
-          {icaStations && activeStation
-            ? icaStations[activeStation]["PM 2.5"] !== undefined
-              ? replaceNaN(parseInt(icaStations[activeStation]["PM 2.5"]))
-              : replaceNaN(parseInt(icaStations[activeStation]["PM 10"]))
+          {stationsAirQuality && activeStation
+            ? replaceNaN(
+                Math.round(
+                  parseFloat(
+                    filterValue(
+                      stationsAirQuality["estaciones"],
+                      "codigo",
+                      activeStation
+                    )["concentracion"]
+                  ),
+                  0
+                )
+              )
             : null}
         </div>
         <div className="station-panel-units">
-          {icaUnits && activeStation
-            ? icaUnits[activeStation]["PM 2.5"] !== undefined
-              ? icaUnits[activeStation]["PM 2.5"] + " PM2.5"
-              : icaUnits[activeStation]["PM 10"] + " PM10"
-            : null}
+          {stationsAirQuality && activeStation ? "ug/m3" : null}
         </div>
       </div>
     </>

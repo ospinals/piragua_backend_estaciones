@@ -30,7 +30,17 @@ const LegendControl = () => {
     <>
       <div className="leaflet-top leaflet-right legend-control">
         <div className="leaflet-control-layers leaflet-control">
-          <button className="btn btn-primary" onClick={null}>
+          <button
+            className="btn btn-primary"
+            onClick={null}
+            style={{
+              borderColor: "#6394CF",
+              backgroundColor: "#6394CF",
+              fontSize: "100%",
+              boxSizing: "border-box",
+              width: "100%",
+            }}
+          >
             <AiOutlineInfoCircle />
           </button>
         </div>
