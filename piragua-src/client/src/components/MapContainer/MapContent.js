@@ -18,12 +18,10 @@ import ActiveStationContext from "../../Context/ActiveStationContext";
 import StationsContext from "../../Context/StationsContext";
 import MapContext from "../../Context/MapContext";
 import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelContext";
-import IcaStationsAirQualityContext from "../../Context/IcaStationsAirQualityContext";
-import IcaStationsUnitsContext from "../../Context/IcaStationsUnitsContext";
 import AirQualityTimeSeriesContext from "../../Context/AirQualityTimeSeriesContext";
 import OpenClosePlotPanelContext from "../../Context/OpenClosePlotPanelContext";
-import StationsAirQualityMetaDataContext from "../../Context/StationsAirQualityMetaDataContext";
 import AirQualityActiveStationParametersContext from "../../Context/AirQualityActiveStationParametersContext";
+import TimeWindowContext from "../../Context/TimeWindowContext";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -50,6 +48,9 @@ const MapContent = () => {
 
   const [openClosePlotPanel, setOpenClosePlotPanel] = useState(false);
   const changeOpenClosePlotPanel = (x) => setOpenClosePlotPanel(x);
+
+  const [timeWindow, setTimeWindow] = useState("24h");
+  const changeTimeWindow = (x) => setTimeWindow(x);
 
   /// Get Datetime to know when to fetch data again and re render the app
   const [state, setState] = useState({ num: 0 });
@@ -127,36 +128,40 @@ const MapContent = () => {
           <OpenClosePlotPanelContext.Provider
             value={{ openClosePlotPanel, changeOpenClosePlotPanel }}
           >
-            {/* <StationsContext.Provider value={stations}> */}
-            <AirQualityActiveStationParametersContext.Provider
-              value={{
-                airQualityActiveStationParameters,
-                changeAirQualityActiveStationParameters,
-              }}
+            <TimeWindowContext.Provider
+              value={{ timeWindow, changeTimeWindow }}
             >
-              <StationsAirQualityContext.Provider value={stationsAirQuality}>
-                <AirQualityTimeSeriesContext.Provider
-                  value={{ airQualityTimeSeries, changeAirQualityTimeSeries }}
-                >
-                  <MapContainer
-                    center={position}
-                    zoom={zoom}
-                    // tapTolerance={100}
-                    whenCreated={setMap}
+              {/* <StationsContext.Provider value={stations}> */}
+              <AirQualityActiveStationParametersContext.Provider
+                value={{
+                  airQualityActiveStationParameters,
+                  changeAirQualityActiveStationParameters,
+                }}
+              >
+                <StationsAirQualityContext.Provider value={stationsAirQuality}>
+                  <AirQualityTimeSeriesContext.Provider
+                    value={{ airQualityTimeSeries, changeAirQualityTimeSeries }}
                   >
-                    <LayersControl>
-                      <BaseLayers baseLayerData={baseLayersData} />
-                      <StationsLayer />
-                    </LayersControl>
-                    <LocateControl />
-                    <LegendControl />
-                    {activeStation && <StationPanel />}
-                    {/* {activeStation && <PlotsPanel />} */}
-                  </MapContainer>
-                </AirQualityTimeSeriesContext.Provider>
-              </StationsAirQualityContext.Provider>
-            </AirQualityActiveStationParametersContext.Provider>
-            {/* </StationsContext.Provider> */}
+                    <MapContainer
+                      center={position}
+                      zoom={zoom}
+                      // tapTolerance={100}
+                      whenCreated={setMap}
+                    >
+                      <LayersControl>
+                        <BaseLayers baseLayerData={baseLayersData} />
+                        <StationsLayer />
+                      </LayersControl>
+                      <LocateControl />
+                      <LegendControl />
+                      {activeStation && <StationPanel />}
+                      {activeStation && <PlotsPanel />}
+                    </MapContainer>
+                  </AirQualityTimeSeriesContext.Provider>
+                </StationsAirQualityContext.Provider>
+              </AirQualityActiveStationParametersContext.Provider>
+              {/* </StationsContext.Provider> */}
+            </TimeWindowContext.Provider>
           </OpenClosePlotPanelContext.Provider>
         </OpenCloseStationPanelContext.Provider>
       </ActiveStationContext.Provider>

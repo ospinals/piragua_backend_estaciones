@@ -8,6 +8,7 @@ import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelCon
 import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
 import AirQualityActiveStationParametersContext from "../../Context/AirQualityActiveStationParametersContext";
 import OpenClosePlotPanelContext from "../../Context/OpenClosePlotPanelContext";
+import TimeWindowContext from "../../Context/TimeWindowContext";
 import Dropdown from "react-bootstrap/Dropdown";
 import useSWR from "swr";
 import axios from "axios";
@@ -43,16 +44,11 @@ const StationPanel = () => {
     OpenClosePlotPanelContext
   );
 
-  const [dropDownSelection, setDropDownSelection] = useState("24h");
-
-  const [activeStationName, setActiveStationName] = useState(null);
-
-  useEffect(() => {
-    setActiveStationName(activeStation);
-  }, [activeStation]);
+  const { timeWindow, changeTimeWindow } = useContext(TimeWindowContext);
 
   const handleSelect = (e) => {
-    setDropDownSelection(e);
+    console.log(e);
+    changeTimeWindow(e);
   };
 
   const handleVariablesData = (e) => {
@@ -217,7 +213,7 @@ const StationPanel = () => {
 
   function DropDownVariables({ activeStation }) {
     const { data } = useSWR(
-      `http://192.168.100.123:8000/api/v1/estaciones-aire/${activeStation}/parametros`,
+      `https://www.piraguacorantioquia.com.co/api/v1/estaciones-aire/${activeStation}/parametros`,
       fetcher
     );
 
@@ -270,7 +266,7 @@ const StationPanel = () => {
                   "72h": "Últimas 72 horas",
                   "7d": "Última semana",
                   "30d": "Últimos 30 días",
-                }[dropDownSelection]
+                }[timeWindow]
               }
             </Dropdown.Toggle>
 
@@ -354,9 +350,7 @@ const StationPanel = () => {
           </Button>
         </div>
         <div className="station-panel-name">
-          {activeStation && activeStationName
-            ? `Estación: ${String(activeStationName)}`
-            : null}
+          {activeStation ? `Estación: ${String(activeStation)}` : null}
         </div>
         <div className="close-button">
           <CloseButton onClick={handleClick} />
