@@ -18,7 +18,7 @@ import ActiveStationContext from "../../Context/ActiveStationContext";
 import StationsContext from "../../Context/StationsContext";
 import MapContext from "../../Context/MapContext";
 import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelContext";
-import AirQualityTimeSeriesContext from "../../Context/AirQualityTimeSeriesContext";
+// import AirQualityTimeSeriesContext from "../../Context/AirQualityTimeSeriesContext";
 import OpenClosePlotPanelContext from "../../Context/OpenClosePlotPanelContext";
 import AirQualityActiveStationParametersContext from "../../Context/AirQualityActiveStationParametersContext";
 import TimeWindowContext from "../../Context/TimeWindowContext";
@@ -40,8 +40,8 @@ const MapContent = () => {
   const changeAirQualityActiveStationParameters = (x) =>
     setAirQualityActiveStationParameters(x);
 
-  const [airQualityTimeSeries, setAirQualityTimeSeries] = useState(null);
-  const changeAirQualityTimeSeries = (x) => setAirQualityTimeSeries(x);
+  // const [airQualityTimeSeries, setAirQualityTimeSeries] = useState(null);
+  // const changeAirQualityTimeSeries = (x) => setAirQualityTimeSeries(x);
 
   const [openCloseStationPanel, setOpenCloseStationPanel] = useState(false);
   const changeOpenCloseStationPanel = (x) => setOpenCloseStationPanel(x);
@@ -139,25 +139,25 @@ const MapContent = () => {
                 }}
               >
                 <StationsAirQualityContext.Provider value={stationsAirQuality}>
-                  <AirQualityTimeSeriesContext.Provider
+                  {/* <AirQualityTimeSeriesContext.Provider
                     value={{ airQualityTimeSeries, changeAirQualityTimeSeries }}
+                  > */}
+                  <MapContainer
+                    center={position}
+                    zoom={zoom}
+                    // tapTolerance={100}
+                    whenCreated={setMap}
                   >
-                    <MapContainer
-                      center={position}
-                      zoom={zoom}
-                      // tapTolerance={100}
-                      whenCreated={setMap}
-                    >
-                      <LayersControl>
-                        <BaseLayers baseLayerData={baseLayersData} />
-                        <StationsLayer />
-                      </LayersControl>
-                      <LocateControl />
-                      <LegendControl />
-                      {activeStation && <StationPanel />}
-                      {activeStation && <PlotsPanel />}
-                    </MapContainer>
-                  </AirQualityTimeSeriesContext.Provider>
+                    <LayersControl>
+                      <BaseLayers baseLayerData={baseLayersData} />
+                      <StationsLayer />
+                    </LayersControl>
+                    <LocateControl />
+                    <LegendControl />
+                    {activeStation && <StationPanel />}
+                    {activeStation && <PlotsPanel />}
+                  </MapContainer>
+                  {/* </AirQualityTimeSeriesContext.Provider> */}
                 </StationsAirQualityContext.Provider>
               </AirQualityActiveStationParametersContext.Provider>
               {/* </StationsContext.Provider> */}

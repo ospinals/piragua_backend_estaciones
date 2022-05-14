@@ -14,17 +14,19 @@
     "d3": "^7.4.3",
     "leaflet": "^1.7.1",
     "leaflet.locatecontrol": "^0.76.0",
+    "leaflet.markercluster": "^1.5.3",
     "moment": "^2.29.2",
     "react": "^17.0.2",
     "react-bootstrap": "^2.2.2",
     "react-dom": "^17.0.2",
     "react-horizontal-scrolling-menu": "^2.7.2",
     "react-icons": "^4.3.1",
-    "react-leaflet": "^3.2.5",
+    "react-leaflet": "3.1",
     "react-leaflet-markercluster": "^3.0.0-rc1",
     "react-scripts": "5.0.0",
     "swr": "^1.2.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yarn": "^1.22.18"
   },
   "scripts": {
     "start": "react-scripts start",
