@@ -18,7 +18,7 @@ import { IoIosArrowDropdownCircle } from "react-icons/io";
 const StationPanel = () => {
   const fetcher = (url) => axios.get(url).then((res) => res.data);
   const [dropDownSelectionVariables, setDropDownSelectionVariables] =
-    useState(null);
+    useState("PM 2.5");
 
   function filterValue(obj, key, value) {
     return obj.find(function (v) {
@@ -88,7 +88,7 @@ const StationPanel = () => {
   const AirQualityEvaluation = {
     "-": "No Data",
     Buena: "Buena",
-    Moderada: "Aceptable",
+    Moderada: "Moderada",
     Dangerous: "Peligrosa",
     Harm: "Dañina",
     HarmSensible: "Grupos sensibles",
@@ -256,9 +256,9 @@ const StationPanel = () => {
           </Dropdown>
         </div>
 
-        {/* <div className="dropdown-station-variables">
+        <div className="dropdown-station-variables">
           <DropDownVariables activeStation={activeStation} />
-        </div> */}
+        </div>
 
         <div className="station-panel-icon">
           <img
@@ -325,21 +325,31 @@ const StationPanel = () => {
           </Button>
         </div>
         <div className="station-panel-name">
-          {activeStation ? `Estación: ${String(activeStation)}` : null}
+          {/* {activeStation ? `Estación: ${String(activeStation)}` : null} */}
+          Calidad del aire
         </div>
         <div className="close-button">
           <CloseButton onClick={handleClick} />
         </div>
+
         <div className="station-panel-value">
-          {stationsAirQuality && activeStation
+          {stationsAirQuality &&
+          activeStation &&
+          airQualityActiveStationParameters
             ? replaceNaN(
                 Math.round(
                   parseFloat(
                     filterValue(
-                      stationsAirQuality["estaciones"],
-                      "codigo",
-                      activeStation
+                      airQualityActiveStationParameters["values"],
+                      "parametro_nombre",
+                      dropDownSelectionVariables
                     )["concentracion"]
+
+                    // filterValue(
+                    //   stationsAirQuality["estaciones"],
+                    //   "codigo",
+                    //   activeStation
+                    // )["concentracion"]
                   ),
                   0
                 )
@@ -347,7 +357,15 @@ const StationPanel = () => {
             : null}
         </div>
         <div className="station-panel-units">
-          {stationsAirQuality && activeStation ? "ug/m3" : null}
+          {stationsAirQuality && activeStation && dropDownSelectionVariables
+            ? replaceNaN(
+                filterValue(
+                  stationsAirQuality["tipos"],
+                  "nombre",
+                  dropDownSelectionVariables
+                )["unidad"]
+              )
+            : null}
         </div>
       </div>
     </>

@@ -155,7 +155,7 @@ const MapContent = () => {
                       <LocateControl />
                       <LegendControl />
                       {activeStation && <StationPanel />}
-                      {activeStation && <PlotsPanel />}
+                      {activeStation && timeWindow && <PlotsPanel />}
                     </MapContainer>
                   </AirQualityTimeSeriesContext.Provider>
                 </StationsAirQualityContext.Provider>

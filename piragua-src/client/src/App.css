@@ -419,7 +419,7 @@ p.plot-legend {
   border-width: 1px;
   border-style: solid;
   position: absolute !important;
-  opacity: 98%;
+  opacity: 100%;
 }
 
 .icons-plot-container {
@@ -428,7 +428,7 @@ p.plot-legend {
   overflow-x: scroll;
   overflow-y: hidden;
   direction: rtl;
-  height: 48%;
+  height: 47%;
   /* max-width: 100%; */
   align-self: center;
   justify-self: center;
@@ -436,8 +436,7 @@ p.plot-legend {
   /* margin: 20px; */
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
-  background-color: #313131;
-  opacity: 100%;
+  background-color: #eee;
   border-radius: 20px;
   max-width: 90%;
   right: 5%;
@@ -455,8 +454,10 @@ p.plot-legend {
 
 .icon-plot-div {
   height: 80%;
-  margin-top: 10%;
+  margin-top: 8%;
   margin-bottom: 2%;
+  margin-right: 2%;
+  margin-left: 2%;
   direction: ltr;
   top: 10%;
 }
@@ -477,7 +478,7 @@ p.plot-legend {
   /* margin-right: 1px; */
   text-align: center;
   font-size: 130%;
-  color: #fff;
+  color: #6394cf;
   font-weight: 500;
   width: 150%;
 }
@@ -490,7 +491,7 @@ p.plot-legend {
   /* margin-right: 1px; */
   text-align: center;
   font-size: 130%;
-  color: #fff;
+  color: #6394cf;
   font-weight: bold;
 }
 
@@ -551,4 +552,11 @@ hr {
   right: 10px !important;
   top: 10px !important;
   z-index: 1002 !important;
+}
+
+.logos {
+  position: absolute;
+  bottom: 2%;
+  width: 80%;
+  left: 10%;
 }

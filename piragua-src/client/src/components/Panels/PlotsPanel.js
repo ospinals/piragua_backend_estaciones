@@ -1,5 +1,5 @@
 import React from "react";
-import { useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 
 import "../../App.css";
 
@@ -7,9 +7,12 @@ import ActiveStationContext from "../../Context/ActiveStationContext";
 import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
 import OpenClosePlotPanelContext from "../../Context/OpenClosePlotPanelContext";
 import TimeWindowContext from "../../Context/TimeWindowContext";
+import AirQualityActiveStationParametersContext from "../../Context/AirQualityActiveStationParametersContext";
+
 import { CloseButton, Spinner } from "react-bootstrap";
 import moment from "moment";
 import axios from "axios";
+import useSWR from "swr";
 
 const PlotsPanel = () => {
   function filterValue(obj, key, value) {
@@ -39,7 +42,7 @@ const PlotsPanel = () => {
   const AirQualityEvaluation = {
     "-": "No Data",
     Buena: "Buena",
-    Moderada: "Aceptable",
+    Moderada: "Moderada",
     Dangerous: "Peligrosa",
     Harm: "Dañina",
     HarmSensible: "Grupos sensibles",
@@ -110,19 +113,65 @@ const PlotsPanel = () => {
     OpenClosePlotPanelContext
   );
 
+  const { airQualityActiveStationParameters } = useContext(
+    AirQualityActiveStationParametersContext
+  );
+
   const handleClick = (e) => {
     changeOpenClosePlotPanel(false);
   };
 
-  const final_date = moment(Date.parse("2021-09-01T09:53:00")).format(
-    "YYYY-MM-DDTHH:00:00"
-  );
-  const initial_date = moment(Date.parse("2021-09-01T09:53:00"))
-    .subtract(timeWindow, "hours")
-    .format("YYYY-MM-DDTHH:00:00");
+  function PlotVariable({ timeWindow, variable, activeStation }) {
+    var curDate = new Date();
 
-  console.log(stationsAirQuality);
-  console.log(timeWindow);
+    const timeWindow2Hours = {
+      "24h": 24,
+      "30d": 24 * 30,
+      "72h": 72,
+      "7d": 7 * 24,
+    };
+
+    const endDate = moment(curDate.toISOString()).format("YYYY-MM-DDTHH:00:00");
+    const startDate =
+      moment(curDate.toISOString())
+        .subtract(timeWindow2Hours[timeWindow], "hours")
+        .toISOString()
+        .slice(0, 14)
+        .replace("T", ":") + "00";
+
+    // const random = Math.random();
+    const endPoint = `https://www.piraguacorantioquia.com.co/api/v1/estaciones-aire/${activeStation}/parametros/${variable}?random=${1}&calidad=1&size=${288}&fecha__gte=${startDate}`;
+    console.log(endPoint);
+    const { data } = useSWR(endPoint, fetcher);
+
+    return (
+      <>
+        <div className="icons-plot-container">
+          {data
+            ? data["results"].map((dat) => {
+                return (
+                  <div className="icon-plot-div">
+                    <p className="text-icon-plots-time">
+                      {moment(
+                        Date.parse(dat["fecha"].replace(/-/g, "/"))
+                      ).format("hh A")}
+                    </p>
+                    <img
+                      src={"/iconos-aire/verde.svg"}
+                      alt=""
+                      className="icon-plot"
+                    />
+                    <p className="text-icon-plots">
+                      {replaceNaN(Math.round(parseFloat(dat["muestra"])))}
+                    </p>
+                  </div>
+                );
+              })
+            : null}
+        </div>
+      </>
+    );
+  }
 
   const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length;
 
@@ -135,16 +184,27 @@ const PlotsPanel = () => {
         <div className="close-button-plots">
           <CloseButton onClick={handleClick} />
         </div>
-
+        {console.log(airQualityActiveStationParameters)}
         <div className="plot">
+          {airQualityActiveStationParameters &&
+            airQualityActiveStationParameters["values"].map((parameter) => {
+              return (
+                <PlotVariable
+                  variable={parameter["parametro_id"]}
+                  timeWindow={timeWindow}
+                  activeStation={activeStation}
+                  key={`${activeStation}${parameter["parametro_id"]}`}
+                ></PlotVariable>
+              );
+            })}
+
+          {/* <div className="icons-plot-container"></div>
           <div className="icons-plot-container"></div>
-          <div className="icons-plot-container"></div>
-          <div className="icons-plot-container"></div>
-          <div className="icons-plot-container"></div>
+          <div className="icons-plot-container"></div> */}
         </div>
 
         <div className="plot-legend">
-          <p class="plot-legend">
+          <p className="plot-legend">
             <strong style={{ color: "#6394cf", fontSize: "medium" }}>
               Locación:
             </strong>{" "}
@@ -156,7 +216,7 @@ const PlotsPanel = () => {
               )["municipio_nombre"]
             )}
           </p>
-          <p class="plot-legend">
+          <p className="plot-legend">
             <strong style={{ color: "#6394cf", fontSize: "medium" }}>
               Coordenadas:
             </strong>{" "}
@@ -174,9 +234,9 @@ const PlotsPanel = () => {
               )["longitud"]
             )})`}
           </p>
-          <p class="plot-legend">
+          <p className="plot-legend">
             <strong style={{ color: "#6394cf", fontSize: "medium" }}>
-              Concentración:
+              Concentración PM 2.5:
             </strong>{" "}
             {replaceNaN(
               filterValue(
@@ -187,7 +247,7 @@ const PlotsPanel = () => {
             )}{" "}
             ug/m3
           </p>
-          <p class="plot-legend">
+          <p className="plot-legend">
             {replaceNaN(
               filterValue(
                 stationsAirQuality["estaciones"],
@@ -196,7 +256,7 @@ const PlotsPanel = () => {
               )["norma"]
             )}
           </p>
-          <p class="plot-legend">
+          <p className="plot-legend">
             {replaceNaN(
               filterValue(
                 stationsAirQuality["estaciones"],
@@ -205,6 +265,9 @@ const PlotsPanel = () => {
               )["cumple"]
             )}
           </p>
+        </div>
+        <div>
+          <img src="piragua.png" className="logos"></img>
         </div>
       </div>
     </>
