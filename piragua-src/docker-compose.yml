@@ -1,22 +1,22 @@
 version: "3.9"
 
 services:
-  piragua-estaciones-api:
-    platform: linux/amd64
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    container_name: Piragua-Estaciones-API
-    command: python3 manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
-    # ports:
-    #   - 8000:8000
-    env_file:
-      - .env
-    restart: "on-failure"
-    networks:
-      - piragua-estaciones-api
+  # piragua-estaciones-api:
+  #   platform: linux/amd64
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.dev
+  #   container_name: Piragua-Estaciones-API
+  #   command: python3 manage.py runserver 0.0.0.0:8000
+  #   volumes:
+  #     - .:/app
+  #   # ports:
+  #   #   - 8000:8000
+  #   env_file:
+  #     - .env
+  #   restart: "on-failure"
+  #   networks:
+  #     - piragua-estaciones-api
 
   client:
     platform: linux/amd64
@@ -26,24 +26,23 @@ services:
     container_name: piragua_frontend
     volumes:
       - ./client:/app
-    depends_on:
-      - piragua-estaciones-api
-    networks:
-      - piragua-estaciones-api
+    # depends_on:
+    #   - nginx
+    # networks:
+    #   - piragua-estaciones-api
 
   nginx:
     platform: linux/amd64
     restart: always
-    depends_on:
-      - piragua-estaciones-api
+    # depends_on:
+    #   - piragua-estaciones-api
     build:
       context: ./nginx
       dockerfile: Dockerfile.dev
     ports:
       - 8080:80
-    networks:
-      - piragua-estaciones-api
-
-networks:
-  piragua-estaciones-api:
-    driver: bridge
+    # networks:
+    #   - piragua-estaciones-api
+# networks:
+#   piragua-estaciones-api:
+#     driver: bridge

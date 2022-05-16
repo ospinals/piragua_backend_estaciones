@@ -146,7 +146,11 @@ const PlotsPanel = () => {
 
     return (
       <>
-        <div className="icons-plot-container">
+        <div
+          className="icons-plot-container"
+          key={`${activeStation}${variable}${startDate}`}
+        >
+          {data ? <div className="header-plot">{data["label"]}</div> : null}
           {data
             ? data["results"].map((dat) => {
                 return (
@@ -193,7 +197,7 @@ const PlotsPanel = () => {
                   variable={parameter["parametro_id"]}
                   timeWindow={timeWindow}
                   activeStation={activeStation}
-                  key={`${activeStation}${parameter["parametro_id"]}`}
+                  key={`${activeStation}${parameter["parametro_id"]}${Date()}`}
                 ></PlotVariable>
               );
             })}
@@ -221,17 +225,21 @@ const PlotsPanel = () => {
               Coordenadas:
             </strong>{" "}
             {` (${replaceNaN(
-              filterValue(
-                stationsAirQuality["estaciones"],
-                "codigo",
-                activeStation
-              )["latitud"]
+              parseFloat(
+                filterValue(
+                  stationsAirQuality["estaciones"],
+                  "codigo",
+                  activeStation
+                )["latitud"]
+              ).toFixed(3)
             )}, ${replaceNaN(
-              filterValue(
-                stationsAirQuality["estaciones"],
-                "codigo",
-                activeStation
-              )["longitud"]
+              parseFloat(
+                filterValue(
+                  stationsAirQuality["estaciones"],
+                  "codigo",
+                  activeStation
+                )["longitud"]
+              ).toFixed(3)
             )})`}
           </p>
           <p className="plot-legend">

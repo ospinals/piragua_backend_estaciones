@@ -505,12 +505,13 @@ hr {
 }
 
 .header-plot {
-  color: #fff;
-  position: fixed;
+  color: #000;
+  position: absolute;
   /* float: left; */
-  font-size: large;
+  font-size: medium;
   /* top: 2%; */
-  left: 15%;
+  margin-top: 1%;
+  left: 5%;
   text-align: left;
   align-self: start;
   justify-self: start;

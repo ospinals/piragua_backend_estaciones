@@ -12,6 +12,7 @@ import LocateControl from "./LocateControl";
 import StationPanel from "../Panels/StationPanel";
 import LegendControl from "./LegendControl";
 import PlotsPanel from "../Panels/PlotsPanel";
+import PolygonLayer from "../PolygonsLayer/Polygons";
 
 import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
 import ActiveStationContext from "../../Context/ActiveStationContext";
@@ -66,6 +67,20 @@ const MapContent = () => {
   // }, [state]);
 
   //// Load Data for app
+
+  const {
+    data: dataPolygonsTerritoriales,
+    error: errorDataPolygonsTerritoriales,
+  } = useSWR(
+    "https://www.piraguacorantioquia.com.co/api/v1/localizacion/territoriales",
+    fetcher
+  );
+
+  const polygonsTerritoriales =
+    dataPolygonsTerritoriales && !errorDataPolygonsTerritoriales
+      ? dataPolygonsTerritoriales
+      : {};
+
   const { data: dataStationsAirQuality, error: errorStationsAirQuality } =
     useSWR(
       "https://www.piraguacorantioquia.com.co/api/v1/estaciones-aire?tipo=198",
@@ -151,6 +166,11 @@ const MapContent = () => {
                       <LayersControl>
                         <BaseLayers baseLayerData={baseLayersData} />
                         <StationsLayer />
+                        <PolygonLayer
+                          layerData={polygonsTerritoriales}
+                          layerName="Territoriales"
+                          reversePolygon={true}
+                        />
                       </LayersControl>
                       <LocateControl />
                       <LegendControl />
