@@ -47,7 +47,6 @@ const StationPanel = () => {
   const { timeWindow, changeTimeWindow } = useContext(TimeWindowContext);
 
   const handleSelect = (e) => {
-    console.log(e);
     changeTimeWindow(e);
   };
 
@@ -148,29 +147,6 @@ const StationPanel = () => {
 
   // const evaluateIca = { "PM 2.5": evaluateIcaPM25, "PM 10": evaluateIcaPM10 };
 
-  // function {
-  // const {
-  //   data: dataAirQualityActiveStationParameters,
-  //   error: errorAirQualityActiveStationParameters,
-  // } = useSWR(
-  //   activeStation
-  //     ? `https://www.piraguacorantioquia.com.co/api/v1/estaciones-aire/${activeStation}/parametros`
-  //     : null,
-  //   fetcher,
-  //   { suspense: true }
-  // );
-  // }
-
-  // useEffect(() => {
-  //   activeStation && dataAirQualityActiveStationParameters
-  //     ? changeAirQualityActiveStationParameters(
-  //         dataAirQualityActiveStationParameters
-  //       )
-  //     : changeAirQualityActiveStationParameters(null);
-  // }, [activeStation]);
-
-  // console.log(airQualityActiveStationParameters);
-
   // The forwardRef is important!!
   // Dropdown needs access to the DOM node in order to position the Menu
   const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
@@ -248,7 +224,6 @@ const StationPanel = () => {
       </>
     );
   }
-  console.log(airQualityActiveStationParameters);
 
   return (
     <>
@@ -281,9 +256,9 @@ const StationPanel = () => {
           </Dropdown>
         </div>
 
-        <div className="dropdown-station-variables">
+        {/* <div className="dropdown-station-variables">
           <DropDownVariables activeStation={activeStation} />
-        </div>
+        </div> */}
 
         <div className="station-panel-icon">
           <img
