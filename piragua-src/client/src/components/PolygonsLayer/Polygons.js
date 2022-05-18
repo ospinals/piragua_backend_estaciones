@@ -33,7 +33,6 @@ const PolygonLayer = ({
             ? revertPolygon(poly["poly"]["coordinates"])
             : poly["poly"]["coordinates"];
 
-          console.log(polygon);
           /* build polygons */
           return (
             <Polygon

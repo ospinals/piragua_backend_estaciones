@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"
+[
+<!ATTLIST g
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:layerName CDATA #IMPLIED >
+<!ATTLIST g
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:mask CDATA #IMPLIED >
+<!ATTLIST text
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:width CDATA #IMPLIED >
+
+<!ATTLIST path
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:blendMode CDATA #IMPLIED >
+<!ATTLIST path
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowColor CDATA #IMPLIED >
+<!ATTLIST path
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowOpacity CDATA #IMPLIED >
+<!ATTLIST path
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowRadius CDATA #IMPLIED >
+<!ATTLIST path
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowOffset CDATA #IMPLIED >
+<!ATTLIST path
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowAngle CDATA #IMPLIED >
+
+<!ATTLIST image
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:blendMode CDATA #IMPLIED >
+<!ATTLIST image
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowColor CDATA #IMPLIED >
+<!ATTLIST image
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowOpacity CDATA #IMPLIED >
+<!ATTLIST image
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowRadius CDATA #IMPLIED >
+<!ATTLIST image
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowOffset CDATA #IMPLIED >
+<!ATTLIST image
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowAngle CDATA #IMPLIED >
+
+<!ATTLIST g
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:blendMode CDATA #IMPLIED >
+<!ATTLIST g
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowColor CDATA #IMPLIED >
+<!ATTLIST g
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowOpacity CDATA #IMPLIED >
+<!ATTLIST g
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowRadius CDATA #IMPLIED >
+<!ATTLIST g
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowOffset CDATA #IMPLIED >
+<!ATTLIST g
+  xmlns:vectornator CDATA #FIXED "http://vectornator.io"
+  vectornator:shadowAngle CDATA #IMPLIED >
+
+<!ENTITY % SVG.filter.extra.content  "| feDropShadow" >
+<!ELEMENT feDropShadow EMPTY>
+<!ATTLIST feDropShadow
+  xmlns:svg CDATA #FIXED "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"
+  dx CDATA #IMPLIED>
+<!ATTLIST feDropShadow
+  xmlns:svg CDATA #FIXED "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"
+  dy CDATA #IMPLIED>
+<!ATTLIST feDropShadow
+  xmlns:svg CDATA #FIXED "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"
+  stdDeviation CDATA #IMPLIED>
+<!ATTLIST feDropShadow
+  xmlns:svg CDATA #FIXED "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"
+  flood-opacity CDATA #IMPLIED>
+<!ATTLIST feDropShadow
+  xmlns:svg CDATA #FIXED "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"
+  in CDATA #IMPLIED>
+<!ATTLIST feDropShadow
+  xmlns:svg CDATA #FIXED "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"
+  result CDATA #IMPLIED>
+<!ATTLIST feDropShadow
+  xmlns:svg CDATA #FIXED "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"
+  flood-color CDATA #IMPLIED>
+]
+>
+<!-- Created with Vectornator (http://vectornator.io/) -->
+<svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 42 52" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs/>
+<g id="Untitled" vectornator:layerName="Untitled">
+<g opacity="1">
+<clipPath id="ClipPath">
+<path d="M0 0L42 0L42 52L0 52L0 0Z" fill-rule="evenodd"/>
+</clipPath>
+<g clip-path="url(#ClipPath)">
+<path d="M20.999 0.367199C10.106 0.367199 1.245 9.2302 1.245 20.1242C1.245 27.9092 4.504 35.7832 10.669 42.8952C15.274 48.2092 19.839 51.2192 20.03 51.3442C20.324 51.5372 20.662 51.6332 20.999 51.6332C21.336 51.6332 21.675 51.5372 21.969 51.3442C22.16 51.2192 26.726 48.2092 31.33 42.8952C37.496 35.7832 40.755 27.9092 40.755 20.1242C40.755 9.2302 31.894 0.367199 20.999 0.367199" fill="#f86e00" fill-rule="evenodd" opacity="1" stroke="none"/>
+<g opacity="0.300003">
+<clipPath id="ClipPath_2">
+<path d="M6.44 35.28L37.64 35.28L37.64 9.84L6.44 9.84L6.44 35.28Z" fill-rule="evenodd"/>
+</clipPath>
+<g clip-path="url(#ClipPath_2)"/>
+</g>
+<path d="M9.4854 29.752C9.4854 29.963 9.2674 30.134 8.9984 30.134L8.9374 30.134C8.6684 30.134 8.4504 29.963 8.4504 29.752L8.4504 11.271C8.4504 11.061 8.6684 10.89 8.9374 10.89L8.9984 10.89C9.2674 10.89 9.4854 11.061 9.4854 11.271L9.4854 29.752Z" fill="#ffffff" fill-rule="evenodd" opacity="1" stroke="none"/>
+<path d="M15.4297 12.9131C15.4297 13.1211 15.2607 13.2891 15.0527 13.2891L9.5947 13.2891C9.3867 13.2891 9.2187 13.1211 9.2187 12.9131L9.2187 12.4891C9.2187 12.2811 9.3867 12.1131 9.5947 12.1131L15.0527 12.1131C15.2607 12.1131 15.4297 12.2811 15.4297 12.4891L15.4297 12.9131Z" fill="#ffffff" fill-rule="evenodd" opacity="1" stroke="none"/>
+<path d="M15.1787 15.7363C15.1787 15.9433 15.0097 16.1123 14.8017 16.1123L9.3437 16.1123C9.1357 16.1123 8.9677 15.9433 8.9677 15.7363L8.9677 15.3123C8.9677 15.1043 9.1357 14.9363 9.3437 14.9363L14.8017 14.9363C15.0097 14.9363 15.1787 15.1043 15.1787 15.3123L15.1787 15.7363Z" fill="#ffffff" fill-rule="evenodd" opacity="1" stroke="none"/>
+<path d="M13.5781 18.2451C13.5781 18.4531 13.4431 18.6221 13.2761 18.6221L8.8931 18.6221C8.7261 18.6221 8.5911 18.4531 8.5911 18.2451L8.5911 17.8221C8.5911 17.6141 8.7261 17.4451 8.8931 17.4451L13.2761 17.4451C13.4431 17.4451 13.5781 17.6141 13.5781 17.8221L13.5781 18.2451Z" fill="#ffffff" fill-rule="evenodd" opacity="1" stroke="none"/>
+<path d="M15.4297 21.1318C15.4297 21.3388 15.2607 21.5078 15.0527 21.5078L9.5947 21.5078C9.3867 21.5078 9.2187 21.3388 9.2187 21.1318L9.2187 20.7078C9.2187 20.4998 9.3867 20.3318 9.5947 20.3318L15.0527 20.3318C15.2607 20.3318 15.4297 20.4998 15.4297 20.7078L15.4297 21.1318Z" fill="#ffffff" fill-rule="evenodd" opacity="1" stroke="none"/>
+<path d="M15.3037 26.7773C15.3037 26.9853 15.1357 27.1543 14.9277 27.1543L9.4697 27.1543C9.2617 27.1543 9.0927 26.9853 9.0927 26.7773L9.0927 26.3543C9.0927 26.1463 9.2617 25.9773 9.4697 25.9773L14.9277 25.9773C15.1357 25.9773 15.3037 26.1463 15.3037 26.3543L15.3037 26.7773Z" fill="#ffffff" fill-rule="evenodd" opacity="1" stroke="none"/>
+<path d="M16.2764 29.2871C16.2764 29.4951 16.0814 29.6641 15.8404 29.6641L9.5284 29.6641C9.2884 29.6641 9.0924 29.4951 9.0924 29.2871L9.0924 28.8641C9.0924 28.6561 9.2884 28.4871 9.5284 28.4871L15.8404 28.4871C16.0814 28.4871 16.2764 28.6561 16.2764 28.8641L16.2764 29.2871Z" fill="#ffffff" fill-rule="evenodd" opacity="1" stroke="none"/>
+<path d="M13.5781 23.9551C13.5781 24.1621 13.4431 24.3311 13.2761 24.3311L8.8931 24.3311C8.7261 24.3311 8.5911 24.1621 8.5911 23.9551L8.5911 23.5311C8.5911 23.3231 8.7261 23.1541 8.8931 23.1541L13.2761 23.1541C13.4431 23.1541 13.5781 23.3231 13.5781 23.5311L13.5781 23.9551Z" fill="#ffffff" fill-rule="evenodd" opacity="1" stroke="none"/>
+<path d="M14.2451 17.1475L14.9951 17.1475C15.9201 17.7915 17.0961 18.5065 18.2711 18.4765C18.9501 18.4595 19.3731 18.0605 19.8011 17.5795C20.1461 17.1895 20.4861 16.7715 20.9411 16.5035C21.2051 16.3495 21.5021 16.2605 21.8071 16.2485C22.5701 16.2175 23.2821 16.4875 23.9361 16.8595C24.2461 17.0355 24.5361 17.2405 24.8291 17.4415C25.4591 17.8725 26.0361 18.4105 26.7971 18.5985C27.6271 18.8035 28.4011 18.4355 29.1201 18.0555C29.5581 17.8245 29.9901 17.5805 30.4331 17.3585C30.8881 17.1315 31.4151 16.9505 31.9241 17.0655C32.4181 17.1765 32.8201 17.4995 33.1751 17.8465C33.3021 17.9715 33.4331 18.0985 33.5501 18.2345L33.5501 21.2845C33.0881 20.7315 32.6021 20.1565 31.8361 20.0865C31.1091 20.0215 30.4131 20.3835 29.7961 20.7205C29.4491 20.9105 29.1121 21.1425 28.7541 21.3085C28.4271 21.4595 28.0881 21.5815 27.7311 21.6425C27.3581 21.7065 26.9761 21.7025 26.6091 21.6005C25.9011 21.4055 25.3431 20.9155 24.7641 20.4895C24.4461 20.2555 24.1161 20.0065 23.7681 19.8205C23.3901 19.6165 22.9891 19.4495 22.5691 19.3465C22.2321 19.2655 21.8671 19.2445 21.5231 19.2935C20.9771 19.3715 20.5871 19.6825 20.2391 20.0895C20.0441 20.3175 19.8671 20.5585 19.6761 20.7895C19.1861 21.3795 18.4871 21.6255 17.7281 21.5085C17.3201 21.4465 16.7931 21.2695 16.4701 21.0015C16.4581 20.9925 16.4671 20.8405 16.4661 20.8245C16.4551 20.6735 16.4341 20.5275 16.3851 20.3845C16.0531 19.4395 14.8521 19.1725 13.9601 19.3385C14.0741 19.3185 14.2671 18.9105 14.3181 18.8185C14.5141 18.4595 14.6891 17.7105 14.3991 17.3475C14.3371 17.2685 14.2451 17.1475 14.2451 17.1475" fill="#ffffff" fill-rule="evenodd" opacity="1" stroke="none"/>
+<path d="M14.0537 24.9854C14.1367 24.9854 14.3437 24.5764 14.3857 24.5014C14.6797 23.9684 14.5917 23.2224 14.1587 22.7904L13.9917 22.6224C14.2967 22.6354 14.6037 22.6734 14.9097 22.6554C14.9867 22.6514 15.4957 22.4924 15.5177 22.5064C15.8457 22.7024 16.1927 22.8724 16.5437 23.0214C17.1717 23.2884 17.8837 23.5484 18.5767 23.4404C19.1937 23.3444 19.5757 22.9204 19.9527 22.4624C20.1577 22.2134 20.3647 21.9594 20.5917 21.7304C21.4997 20.8184 22.7127 21.2264 23.7017 21.7884C24.3087 22.1314 24.8327 22.5804 25.4137 22.9604C25.8287 23.2314 26.3097 23.4904 26.7927 23.6194C27.4097 23.7834 27.9857 23.6054 28.5397 23.3234C28.8777 23.1524 29.2157 22.9734 29.5437 22.7834C30.1687 22.4214 30.8457 22.0314 31.5947 22.0684C32.1387 22.0964 32.7167 22.3664 33.0847 22.7684L33.5237 23.2504L33.5237 29.2944L17.1277 29.2944C17.1497 29.2944 17.0107 28.7844 16.9997 28.7564C16.8037 28.2794 16.3667 28.0404 15.9567 27.7664C16.0507 27.8304 16.3317 27.3984 16.3557 27.3534C16.9487 26.2124 15.9007 25.0334 14.7567 24.9874C14.5237 24.9774 14.2877 24.9854 14.0537 24.9854" fill="#ffffff" fill-rule="evenodd" opacity="1" stroke="none"/>
+</g>
+</g>
+</g>
+</svg>

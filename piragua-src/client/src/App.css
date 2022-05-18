@@ -561,3 +561,36 @@ hr {
   width: 80%;
   left: 10%;
 }
+
+.legend-panel-control {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 2px 10px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    ". . . close-button"
+    ". . . ."
+    ". . . ."
+    ". . . .";
+  background-color: #fff;
+  /* bottom: ; */
+  bottom: 5% !important;
+  height: 70% !important;
+  left: 6% !important;
+  right: 6% !important;
+  width: auto;
+  z-index: 1010 !important;
+  border-radius: 20px !important;
+  border-color: #fff;
+  border-width: 1px;
+  border-style: solid;
+  position: absolute !important;
+  overflow-y: auto;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.legend-panel-control::-webkit-scrollbar {
+  display: none;
+}

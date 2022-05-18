@@ -7,23 +7,19 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import "leaflet/dist/leaflet.css";
 import "../../App.css";
 import MapContext from "../../Context/MapContext";
+import OpenCloseLegendPanelContext from "../../Context/OpenCloseLegendPanelContext";
 
 const ZOOM_LEVEL = 11;
 
 const LegendControl = () => {
   const map = useContext(MapContext);
-  const location = useGeoLocation();
+  const { openCloseLegendPanel, changeOpenCloseLegendPanel } = useContext(
+    OpenCloseLegendPanelContext
+  );
 
-  const showMyLocation = () => {
-    if (location.loaded && !location.error) {
-      map.flyTo(
-        [location.coordinates.lat, location.coordinates.lng],
-        ZOOM_LEVEL,
-        { animate: false }
-      );
-    } else {
-      alert(location.error.message);
-    }
+  const handleClick = (e) => {
+    console.log("click");
+    changeOpenCloseLegendPanel(true);
   };
 
   return (
@@ -32,7 +28,7 @@ const LegendControl = () => {
         <div className="leaflet-control-layers leaflet-control">
           <button
             className="btn btn-primary"
-            onClick={null}
+            onClick={handleClick}
             style={{
               borderColor: "#6394CF",
               backgroundColor: "#6394CF",
