@@ -62,11 +62,11 @@ const PlotsPanel = () => {
   const evaluateIcaPM25 = (x) => {
     let evaluation = null;
     if (x === null || x === undefined) {
-      evaluation = "NoData";
+      evaluation = "-";
     } else if (x <= 12) {
       evaluation = "Buena";
     } else if (x <= 37) {
-      evaluation = "Acceptable";
+      evaluation = "Moderada";
     } else if (x <= 55) {
       evaluation = "HarmSensible";
     } else if (x <= 150) {
@@ -82,11 +82,11 @@ const PlotsPanel = () => {
   const evaluateIcaPM10 = (x) => {
     let evaluation = null;
     if (x === null || x === undefined) {
-      evaluation = "NoData";
+      evaluation = "-";
     } else if (x <= 54) {
       evaluation = "Buena";
     } else if (x <= 154) {
-      evaluation = "Acceptable";
+      evaluation = "Moderada";
     } else if (x <= 254) {
       evaluation = "HarmSensible";
     } else if (x <= 354) {
@@ -99,7 +99,54 @@ const PlotsPanel = () => {
     return evaluation;
   };
 
-  const evaluateIca = { "PM 2.5": evaluateIcaPM25, "PM 10": evaluateIcaPM10 };
+  const evaluateIcaNO2 = (x) => {
+    let evaluation = null;
+    if (x === null || x === undefined) {
+      evaluation = "-";
+    } else if (x <= 100) {
+      evaluation = "Buena";
+    } else if (x <= 189) {
+      evaluation = "Moderada";
+    } else if (x <= 677) {
+      evaluation = "HarmSensible";
+    } else if (x <= 1221) {
+      evaluation = "Harm";
+    } else if (x <= 2349) {
+      evaluation = "VeryHarm";
+    } else {
+      evaluation = "Dangerous";
+    }
+    return evaluation;
+  };
+
+  const evaluateIcaO3 = (x) => {
+    let evaluation = null;
+    if (x === null || x === undefined) {
+      evaluation = "-";
+    } else if (x <= 106) {
+      evaluation = "Buena";
+    } else if (x <= 138) {
+      evaluation = "Moderada";
+    } else if (x <= 167) {
+      evaluation = "HarmSensible";
+    } else if (x <= 207) {
+      evaluation = "Harm";
+    } else if (x <= 393) {
+      evaluation = "VeryHarm";
+    } else {
+      evaluation = "Dangerous";
+    }
+    return evaluation;
+  };
+
+  const evaluateIca = {
+    "PM 2.5": evaluateIcaPM25,
+    "PM 10": evaluateIcaPM10,
+    NO2: evaluateIcaNO2,
+    O3: evaluateIcaO3,
+    NOX: evaluateIcaNO2,
+    NO: evaluateIcaNO2,
+  };
 
   const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -121,7 +168,7 @@ const PlotsPanel = () => {
     changeOpenClosePlotPanel(false);
   };
 
-  function PlotVariable({ timeWindow, variable, activeStation }) {
+  function PlotVariable({ timeWindow, variable, activeStation, units }) {
     var curDate = new Date();
 
     const timeWindow2Hours = {
@@ -149,23 +196,49 @@ const PlotsPanel = () => {
           className="icons-plot-container"
           key={`${activeStation}${variable}${startDate}`}
         >
-          {data ? <div className="header-plot">{data["label"]}</div> : null}
+          {data ? (
+            <div className="header-plot">
+              {
+                {
+                  O3: "Ozono",
+                  NOX: "Óxido de Nitrogeno",
+                  NO: "Mónoxido de Nitrogeno",
+                  NO2: "Dióxido de Nitrogeno",
+                  "PM 2.5": "PM 2.5",
+                  "PM 10": "PM 10",
+                }[data["label"].split(" (")[0]]
+              }
+            </div>
+          ) : null}
           {data
             ? data["results"].map((dat) => {
                 return (
                   <div className="icon-plot-div">
                     <p className="text-icon-plots-time">
-                      {moment(
-                        Date.parse(dat["fecha"].replace(/-/g, "/"))
-                      ).format("hh A")}
+                      {moment(Date.parse(dat["fecha"].replace(/-/g, "/")))
+                        .format("ddd d - h A")
+                        .replace("Tue", "Ma")
+                        .replace("Thu", "Ju")
+                        .replace("Wed", "Mi")
+                        .replace("Fri", "Vi")
+                        .replace("Mon", "Lu")
+                        .replace("Sat", "Sa")
+                        .replace("Sun", "Do")}
                     </p>
                     <img
-                      src={"/iconos-aire/verde.svg"}
+                      src={
+                        IconsAirQuality[
+                          evaluateIca[data["label"].split(" (")[0]](
+                            parseFloat(dat["muestra"])
+                          )
+                        ]
+                      }
                       alt=""
                       className="icon-plot"
                     />
                     <p className="text-icon-plots">
-                      {replaceNaN(Math.round(parseFloat(dat["muestra"])))}
+                      {replaceNaN(Math.round(parseFloat(dat["muestra"])))}{" "}
+                      {units}
                     </p>
                   </div>
                 );
@@ -182,7 +255,14 @@ const PlotsPanel = () => {
     <>
       <div className={`${openClosePlotPanel ? "plots-panel-control" : "hide"}`}>
         <div className="plot-panel-title">
-          {activeStation ? `Estación: ${String(activeStation)}` : null}
+          {activeStation ? (
+            <>
+              Estación:{" "}
+              <span style={{ color: "#000", fontWeight: 800 }}>
+                {String(activeStation)}
+              </span>
+            </>
+          ) : null}
         </div>
         <div className="close-button-plots">
           <CloseButton onClick={handleClick} />
@@ -196,18 +276,26 @@ const PlotsPanel = () => {
                   variable={parameter["parametro_id"]}
                   timeWindow={timeWindow}
                   activeStation={activeStation}
+                  units={
+                    stationsAirQuality["tipos"]
+                      ? replaceNaN(
+                          filterValue(
+                            stationsAirQuality["tipos"],
+                            "nombre",
+                            parameter["parametro_nombre"]
+                          )["unidad"]
+                        )
+                      : null
+                  }
                   key={`${activeStation}${parameter["parametro_id"]}${Date()}`}
                 ></PlotVariable>
               );
             })}
-
-          {/* <div className="icons-plot-container"></div>
-          <div className="icons-plot-container"></div>
-          <div className="icons-plot-container"></div> */}
         </div>
 
         <div className="plot-legend">
           <p className="plot-legend">
+            <img src="Location.png" className="location-icon-plot" alt="" />{" "}
             <strong style={{ color: "#6394cf", fontSize: "medium" }}>
               Locación:
             </strong>{" "}
@@ -220,6 +308,7 @@ const PlotsPanel = () => {
             )}
           </p>
           <p className="plot-legend">
+            <img src="Coordenadas.png" className="location-icon-plot" alt="" />{" "}
             <strong style={{ color: "#6394cf", fontSize: "medium" }}>
               Coordenadas:
             </strong>{" "}
@@ -242,6 +331,11 @@ const PlotsPanel = () => {
             )})`}
           </p>
           <p className="plot-legend">
+            <img
+              src="Concentración.png"
+              className="location-icon-plot"
+              alt=""
+            />{" "}
             <strong style={{ color: "#6394cf", fontSize: "medium" }}>
               Concentración PM 2.5:
             </strong>{" "}
@@ -251,7 +345,7 @@ const PlotsPanel = () => {
                 "codigo",
                 activeStation
               )["concentracion"]
-            )}{" "}
+            ).toFixed(1)}{" "}
             ug/m3
           </p>
           <p className="plot-legend">
@@ -274,7 +368,7 @@ const PlotsPanel = () => {
           </p>
         </div>
         <div>
-          <img src="piragua.png" className="logos"></img>
+          <img src="piragua.png" className="logos" alt=""></img>
         </div>
       </div>
     </>
