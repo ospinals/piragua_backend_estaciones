@@ -40,9 +40,7 @@ const StationPanel = () => {
     OpenCloseStationPanelContext
   );
 
-  const { openClosePlotPanel, changeOpenClosePlotPanel } = useContext(
-    OpenClosePlotPanelContext
-  );
+  const { changeOpenClosePlotPanel } = useContext(OpenClosePlotPanelContext);
 
   const { timeWindow, changeTimeWindow } = useContext(TimeWindowContext);
 
@@ -70,7 +68,7 @@ const StationPanel = () => {
   const replaceNaN = (x) => {
     if (typeof x === "string") {
       return x;
-    } else if (isNaN(x)) {
+    } else if (isNaN(x) || x === 0) {
       return "-";
     } else return x;
   };
@@ -79,48 +77,48 @@ const StationPanel = () => {
     "-": "/iconos-aire/azul.svg",
     Buena: "/iconos-aire/verde.svg",
     Moderada: "/iconos-aire/amarillo.svg",
-    Dangerous: "/iconos-aire/marron.svg",
-    Harm: "/iconos-aire/rojo.svg",
-    HarmSensible: "/iconos-aire/naranja.svg",
-    VeryHarm: "/iconos-aire/morado.svg",
+    Peligrosa: "/iconos-aire/marron.svg",
+    "Dañina para la salud": "/iconos-aire/rojo.svg",
+    "Dañina - Grupos sensibles": "/iconos-aire/naranja.svg",
+    "Muy dañina para la salud": "/iconos-aire/morado.svg",
   };
 
   const AirQualityEvaluation = {
     "-": "No Data",
     Buena: "Buena",
     Moderada: "Moderada",
-    Dangerous: "Peligrosa",
-    Harm: "Dañina",
-    HarmSensible: "Grupos sensibles",
-    VeryHarm: "Muy dañina",
+    Peligrosa: "Peligrosa",
+    "Dañina para la salud": "Dañina",
+    "Dañina - Grupos sensibles": "Grupos sensibles",
+    "Muy dañina para la salud": "Muy dañina",
   };
 
   const AirQualityColor = {
     "-": "nodata",
     Buena: "green",
     Moderada: "yellow",
-    Dangerous: "brown",
-    Harm: "red",
-    HarmSensible: "orange",
-    VeryHarm: "purple",
+    Peligrosa: "brown",
+    "Dañina para la salud": "red",
+    "Dañina - Grupos sensibles": "orange",
+    "Muy dañina para la salud": "purple",
   };
 
   const evaluateIcaPM25 = (x) => {
     let evaluation = null;
     if (x === null || x === undefined) {
-      evaluation = "NoData";
+      evaluation = "-";
     } else if (x <= 12) {
       evaluation = "Buena";
     } else if (x <= 37) {
-      evaluation = "Acceptable";
+      evaluation = "Moderada";
     } else if (x <= 55) {
-      evaluation = "HarmSensible";
+      evaluation = "Dañina - Grupos sensibles";
     } else if (x <= 150) {
-      evaluation = "Harm";
+      evaluation = "Dañina para la salud";
     } else if (x <= 250) {
-      evaluation = "VeryHarm";
+      evaluation = "Muy dañina para la salud";
     } else {
-      evaluation = "Dangerous";
+      evaluation = "Peligrosa";
     }
     return evaluation;
   };
@@ -128,24 +126,71 @@ const StationPanel = () => {
   const evaluateIcaPM10 = (x) => {
     let evaluation = null;
     if (x === null || x === undefined) {
-      evaluation = "NoData";
+      evaluation = "-";
     } else if (x <= 54) {
       evaluation = "Buena";
     } else if (x <= 154) {
-      evaluation = "Acceptable";
+      evaluation = "Moderada";
     } else if (x <= 254) {
-      evaluation = "HarmSensible";
+      evaluation = "Dañina - Grupos sensibles";
     } else if (x <= 354) {
-      evaluation = "Harm";
+      evaluation = "Dañina para la salud";
     } else if (x <= 424) {
-      evaluation = "VeryHarm";
+      evaluation = "Muy dañina para la salud";
     } else {
-      evaluation = "Dangerous";
+      evaluation = "Peligrosa";
     }
     return evaluation;
   };
 
-  // const evaluateIca = { "PM 2.5": evaluateIcaPM25, "PM 10": evaluateIcaPM10 };
+  const evaluateIcaNO2 = (x) => {
+    let evaluation = null;
+    if (x === null || x === undefined) {
+      evaluation = "-";
+    } else if (x <= 100) {
+      evaluation = "Buena";
+    } else if (x <= 189) {
+      evaluation = "Moderada";
+    } else if (x <= 677) {
+      evaluation = "Dañina - Grupos sensibles";
+    } else if (x <= 1221) {
+      evaluation = "Dañina para la salud";
+    } else if (x <= 2349) {
+      evaluation = "Muy dañina para la salud";
+    } else {
+      evaluation = "Peligrosa";
+    }
+    return evaluation;
+  };
+
+  const evaluateIcaO3 = (x) => {
+    let evaluation = null;
+    if (x === null || x === undefined) {
+      evaluation = "-";
+    } else if (x <= 106) {
+      evaluation = "Buena";
+    } else if (x <= 138) {
+      evaluation = "Moderada";
+    } else if (x <= 167) {
+      evaluation = "Dañina - Grupos sensibles";
+    } else if (x <= 207) {
+      evaluation = "Dañina para la salud";
+    } else if (x <= 393) {
+      evaluation = "Muy dañina para la salud";
+    } else {
+      evaluation = "Peligrosa";
+    }
+    return evaluation;
+  };
+
+  const evaluateIca = {
+    "PM 2.5": evaluateIcaPM25,
+    "PM 10": evaluateIcaPM10,
+    NO2: evaluateIcaNO2,
+    O3: evaluateIcaO3,
+    NOX: evaluateIcaNO2,
+    NO: evaluateIcaNO2,
+  };
 
   // The forwardRef is important!!
   // Dropdown needs access to the DOM node in order to position the Menu
@@ -263,14 +308,21 @@ const StationPanel = () => {
         <div className="station-panel-icon">
           <img
             src={
-              stationsAirQuality && activeStation
+              stationsAirQuality &&
+              activeStation &&
+              airQualityActiveStationParameters &&
+              dropDownSelectionVariables
                 ? IconsAirQuality[
-                    replaceNaN(
-                      filterValue(
-                        stationsAirQuality["estaciones"],
-                        "codigo",
-                        activeStation
-                      )["categoria"]
+                    evaluateIca[dropDownSelectionVariables](
+                      replaceNaN(
+                        parseFloat(
+                          filterValue(
+                            airQualityActiveStationParameters["values"],
+                            "parametro_nombre",
+                            dropDownSelectionVariables
+                          )["concentracion"]
+                        )
+                      )
                     )
                   ]
                 : null
@@ -281,28 +333,41 @@ const StationPanel = () => {
         </div>
         <div
           className={
-            stationsAirQuality && activeStation
+            stationsAirQuality &&
+            activeStation &&
+            airQualityActiveStationParameters
               ? "station-panel-variable " +
                 AirQualityColor[
-                  replaceNaN(
-                    filterValue(
-                      stationsAirQuality["estaciones"],
-                      "codigo",
-                      activeStation
-                    )["categoria"]
+                  evaluateIca[dropDownSelectionVariables](
+                    replaceNaN(
+                      parseFloat(
+                        filterValue(
+                          airQualityActiveStationParameters["values"],
+                          "parametro_nombre",
+                          dropDownSelectionVariables
+                        )["concentracion"]
+                      ).toFixed(0)
+                    )
                   )
                 ]
               : "station-panel-variable"
           }
         >
-          {stationsAirQuality && activeStation
+          {stationsAirQuality &&
+          activeStation &&
+          dropDownSelectionVariables &&
+          airQualityActiveStationParameters
             ? AirQualityEvaluation[
-                replaceNaN(
-                  filterValue(
-                    stationsAirQuality["estaciones"],
-                    "codigo",
-                    activeStation
-                  )["categoria"]
+                evaluateIca[dropDownSelectionVariables](
+                  replaceNaN(
+                    parseFloat(
+                      filterValue(
+                        airQualityActiveStationParameters["values"],
+                        "parametro_nombre",
+                        dropDownSelectionVariables
+                      )["concentracion"]
+                    ).toFixed(0)
+                  )
                 )
               ]
             : null}
@@ -337,22 +402,13 @@ const StationPanel = () => {
           activeStation &&
           airQualityActiveStationParameters
             ? replaceNaN(
-                Math.round(
-                  parseFloat(
-                    filterValue(
-                      airQualityActiveStationParameters["values"],
-                      "parametro_nombre",
-                      dropDownSelectionVariables
-                    )["concentracion"]
-
-                    // filterValue(
-                    //   stationsAirQuality["estaciones"],
-                    //   "codigo",
-                    //   activeStation
-                    // )["concentracion"]
-                  ),
-                  0
-                )
+                parseFloat(
+                  filterValue(
+                    airQualityActiveStationParameters["values"],
+                    "parametro_nombre",
+                    dropDownSelectionVariables
+                  )["concentracion"]
+                ).toFixed(0)
               )
             : null}
         </div>

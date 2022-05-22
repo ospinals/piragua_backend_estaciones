@@ -1,5 +1,5 @@
 import React from "react";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 import "../../App.css";
 
@@ -9,7 +9,7 @@ import OpenClosePlotPanelContext from "../../Context/OpenClosePlotPanelContext";
 import TimeWindowContext from "../../Context/TimeWindowContext";
 import AirQualityActiveStationParametersContext from "../../Context/AirQualityActiveStationParametersContext";
 
-import { CloseButton, Spinner } from "react-bootstrap";
+import { CloseButton } from "react-bootstrap";
 import moment from "moment";
 import axios from "axios";
 import useSWR from "swr";
@@ -24,7 +24,7 @@ const PlotsPanel = () => {
   const replaceNaN = (x) => {
     if (typeof x === "string") {
       return x;
-    } else if (isNaN(x)) {
+    } else if (isNaN(x) || x <= 0) {
       return "-";
     } else return x;
   };
@@ -33,108 +33,108 @@ const PlotsPanel = () => {
     "-": "/iconos-aire/azul.svg",
     Buena: "/iconos-aire/verde.svg",
     Moderada: "/iconos-aire/amarillo.svg",
-    Dangerous: "/iconos-aire/marron.svg",
-    Harm: "/iconos-aire/rojo.svg",
-    HarmSensible: "/iconos-aire/naranja.svg",
-    VeryHarm: "/iconos-aire/morado.svg",
+    Peligrosa: "/iconos-aire/marron.svg",
+    "Dañina para la salud": "/iconos-aire/rojo.svg",
+    "Dañina - Grupos sensibles": "/iconos-aire/naranja.svg",
+    "Muy dañina para la salud": "/iconos-aire/morado.svg",
   };
 
-  const AirQualityEvaluation = {
-    "-": "No Data",
-    Buena: "Buena",
-    Moderada: "Moderada",
-    Dangerous: "Peligrosa",
-    Harm: "Dañina",
-    HarmSensible: "Grupos sensibles",
-    VeryHarm: "Muy dañina",
-  };
+  // const AirQualityEvaluation = {
+  //   "-": "No Data",
+  //   Buena: "Buena",
+  //   Moderada: "Moderada",
+  //   Peligrosa: "Peligrosa",
+  //   "Dañina para la salud": "Dañina",
+  //   "Dañina - Grupos sensibles": "Grupos sensibles",
+  //   "Muy dañina para la salud": "Muy dañina",
+  // };
 
-  const AirQualityColor = {
-    "-": "nodata",
-    Buena: "green",
-    Moderada: "yellow",
-    Dangerous: "brown",
-    Harm: "red",
-    HarmSensible: "orange",
-    VeryHarm: "purple",
-  };
+  // const AirQualityColor = {
+  //   "-": "nodata",
+  //   Buena: "green",
+  //   Moderada: "yellow",
+  //   Peligrosa: "brown",
+  //   "Dañina para la salud": "red",
+  //   "Dañina - Grupos sensibles": "orange",
+  //   "Muy dañina para la salud": "purple",
+  // };
 
   const evaluateIcaPM25 = (x) => {
     let evaluation = null;
-    if (x === null || x === undefined) {
+    if (x === null || x === undefined || x <= 0 || x === "-") {
       evaluation = "-";
     } else if (x <= 12) {
       evaluation = "Buena";
     } else if (x <= 37) {
       evaluation = "Moderada";
     } else if (x <= 55) {
-      evaluation = "HarmSensible";
+      evaluation = "Dañina - Grupos sensibles";
     } else if (x <= 150) {
-      evaluation = "Harm";
+      evaluation = "Dañina para la salud";
     } else if (x <= 250) {
-      evaluation = "VeryHarm";
+      evaluation = "Muy dañina para la salud";
     } else {
-      evaluation = "Dangerous";
+      evaluation = "Peligrosa";
     }
     return evaluation;
   };
 
   const evaluateIcaPM10 = (x) => {
     let evaluation = null;
-    if (x === null || x === undefined) {
+    if (x === null || x === undefined || x <= 0 || x === "-") {
       evaluation = "-";
     } else if (x <= 54) {
       evaluation = "Buena";
     } else if (x <= 154) {
       evaluation = "Moderada";
     } else if (x <= 254) {
-      evaluation = "HarmSensible";
+      evaluation = "Dañina - Grupos sensibles";
     } else if (x <= 354) {
-      evaluation = "Harm";
+      evaluation = "Dañina para la salud";
     } else if (x <= 424) {
-      evaluation = "VeryHarm";
+      evaluation = "Muy dañina para la salud";
     } else {
-      evaluation = "Dangerous";
+      evaluation = "Peligrosa";
     }
     return evaluation;
   };
 
   const evaluateIcaNO2 = (x) => {
     let evaluation = null;
-    if (x === null || x === undefined) {
+    if (x === null || x === undefined || x <= 0 || x === "-") {
       evaluation = "-";
     } else if (x <= 100) {
       evaluation = "Buena";
     } else if (x <= 189) {
       evaluation = "Moderada";
     } else if (x <= 677) {
-      evaluation = "HarmSensible";
+      evaluation = "Dañina - Grupos sensibles";
     } else if (x <= 1221) {
-      evaluation = "Harm";
+      evaluation = "Dañina para la salud";
     } else if (x <= 2349) {
-      evaluation = "VeryHarm";
+      evaluation = "Muy dañina para la salud";
     } else {
-      evaluation = "Dangerous";
+      evaluation = "Peligrosa";
     }
     return evaluation;
   };
 
   const evaluateIcaO3 = (x) => {
     let evaluation = null;
-    if (x === null || x === undefined) {
+    if (x === null || x === undefined || x <= 0 || x === "-") {
       evaluation = "-";
     } else if (x <= 106) {
       evaluation = "Buena";
     } else if (x <= 138) {
       evaluation = "Moderada";
     } else if (x <= 167) {
-      evaluation = "HarmSensible";
+      evaluation = "Dañina - Grupos sensibles";
     } else if (x <= 207) {
-      evaluation = "Harm";
+      evaluation = "Dañina para la salud";
     } else if (x <= 393) {
-      evaluation = "VeryHarm";
+      evaluation = "Muy dañina para la salud";
     } else {
-      evaluation = "Dangerous";
+      evaluation = "Peligrosa";
     }
     return evaluation;
   };
@@ -150,8 +150,7 @@ const PlotsPanel = () => {
 
   const fetcher = (url) => axios.get(url).then((res) => res.data);
 
-  const { activeStation, changeActiveStation } =
-    useContext(ActiveStationContext);
+  const { activeStation } = useContext(ActiveStationContext);
 
   const stationsAirQuality = useContext(StationsAirQualityContext);
   const { timeWindow } = useContext(TimeWindowContext);
@@ -178,7 +177,7 @@ const PlotsPanel = () => {
       "7d": 7 * 24,
     };
 
-    const endDate = moment(curDate.toISOString()).format("YYYY-MM-DDTHH:00:00");
+    // const endDate = moment(curDate.toISOString()).format("YYYY-MM-DDTHH:00:00");
     const startDate =
       moment(curDate.toISOString())
         .subtract(timeWindow2Hours[timeWindow], "hours")
@@ -202,7 +201,7 @@ const PlotsPanel = () => {
                 {
                   O3: "Ozono",
                   NOX: "Óxido de Nitrogeno",
-                  NO: "Mónoxido de Nitrogeno",
+                  NO: "Monóxido de Nitrogeno",
                   NO2: "Dióxido de Nitrogeno",
                   "PM 2.5": "PM 2.5",
                   "PM 10": "PM 10",
@@ -216,7 +215,7 @@ const PlotsPanel = () => {
                   <div className="icon-plot-div">
                     <p className="text-icon-plots-time">
                       {moment(Date.parse(dat["fecha"].replace(/-/g, "/")))
-                        .format("ddd d - h A")
+                        .format("ddd d | h A")
                         .replace("Tue", "Ma")
                         .replace("Thu", "Ju")
                         .replace("Wed", "Mi")
@@ -237,8 +236,7 @@ const PlotsPanel = () => {
                       className="icon-plot"
                     />
                     <p className="text-icon-plots">
-                      {replaceNaN(Math.round(parseFloat(dat["muestra"])))}{" "}
-                      {units}
+                      {parseFloat(dat["muestra"]).toFixed(0)} {units}
                     </p>
                   </div>
                 );
@@ -249,7 +247,7 @@ const PlotsPanel = () => {
     );
   }
 
-  const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length;
+  // const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length;
 
   return (
     <>
