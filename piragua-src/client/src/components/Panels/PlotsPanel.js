@@ -212,10 +212,10 @@ const PlotsPanel = () => {
           {data
             ? data["results"].map((dat) => {
                 return (
-                  <div className="icon-plot-div">
+                  <div className="icon-plot-div" key={`${Math.random()}`}>
                     <p className="text-icon-plots-time">
                       {moment(Date.parse(dat["fecha"].replace(/-/g, "/")))
-                        .format("ddd d | h A")
+                        .format("ddd D | h A")
                         .replace("Tue", "Ma")
                         .replace("Thu", "Ju")
                         .replace("Wed", "Mi")
