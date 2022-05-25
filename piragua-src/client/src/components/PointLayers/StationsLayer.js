@@ -1,17 +1,20 @@
 import React from "react";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import MarkerClusterGroup from "react-leaflet-markercluster";
-import { Marker, Popup, LayersControl, LayerGroup } from "react-leaflet";
+import { Marker, LayersControl, LayerGroup } from "react-leaflet";
 
 import { Icon } from "leaflet";
 import L from "leaflet";
 
 import "../../App.css";
+import { Iconos } from "../../assets/IconosLeaflet.js";
 
 import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
 import ActiveStationContext from "../../Context/ActiveStationContext";
+import ActiveStationAutomaticContext from "../../Context/ActiveStationAutomaticContext";
 import StationsContext from "../../Context/StationsContext";
 import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelContext";
+import OpenCloseStationAutomaticPanelContext from "../../Context/OpenCloseStationAutomaticPanelContext";
 
 export const iconAirQualityNoData = new Icon({
   iconUrl: "iconos-aire/azul.svg",
@@ -57,71 +60,27 @@ export const iconAirQualityDangerous = new Icon({
 
 export const icon = new Icon({
   iconUrl: "iconos-aire/verde.svg",
-  // shadowUrl: "leaf-shadow.png",
   iconSize: [40, 40],
-  // iconAnchor: [22, 94],
   popupAnchor: [0, -26],
 });
 
 const layerNameAirQuality = "Red calidad aire";
-const layerName = "Red meteorológica";
+// const layerName = "Red meteorológica";
 
 const StationsLayer = () => {
   const IconsAirQuality = {
-    NoData: iconAirQualityNoData,
+    "-": iconAirQualityNoData,
     Buena: iconAirQualityGood,
     Moderada: iconAirQualityAcceptable,
-    Dangerous: iconAirQualityDangerous,
-    Harm: iconAirQualityHarm,
-    HarmSensible: iconAirQualityHarmSensible,
-    VeryHarm: iconAirQualityVeryHarm,
+    Peligrosa: iconAirQualityDangerous,
+    "Dañina para la salud": iconAirQualityHarm,
+    "Dañina - Grupos sensibles": iconAirQualityHarmSensible,
+    "Muy dañina para la salud": iconAirQualityVeryHarm,
   };
-
-  const evaluateIcaPM25 = (x) => {
-    let evaluation = null;
-    if (x === null || x === undefined) {
-      evaluation = "NoData";
-    } else if (x <= 12) {
-      evaluation = "Good";
-    } else if (x <= 37) {
-      evaluation = "Acceptable";
-    } else if (x <= 55) {
-      evaluation = "HarmSensible";
-    } else if (x <= 150) {
-      evaluation = "Harm";
-    } else if (x <= 250) {
-      evaluation = "VeryHarm";
-    } else {
-      evaluation = "Dangerous";
-    }
-    return evaluation;
-  };
-
-  const evaluateIcaPM10 = (x) => {
-    let evaluation = null;
-    if (x === null || x === undefined) {
-      evaluation = "NoData";
-    } else if (x <= 54) {
-      evaluation = "Good";
-    } else if (x <= 154) {
-      evaluation = "Acceptable";
-    } else if (x <= 254) {
-      evaluation = "HarmSensible";
-    } else if (x <= 354) {
-      evaluation = "Harm";
-    } else if (x <= 424) {
-      evaluation = "VeryHarm";
-    } else {
-      evaluation = "Dangerous";
-    }
-    return evaluation;
-  };
-
-  const evaluateIca = { "PM 2.5": evaluateIcaPM25, "PM 10": evaluateIcaPM10 };
 
   const createClusterCustomIcon = function (cluster) {
     return L.divIcon({
-      html: `<span>${cluster.getChildCount()}</span>`,
+      html: `<span key=${Math.random()}>${cluster.getChildCount()}</span>`,
       // customMarker is the class name in the styles.css file
       className: "customMarker",
       iconSize: L.point(48, 48, true),
@@ -130,13 +89,20 @@ const StationsLayer = () => {
 
   const stationsAirQuality = useContext(StationsAirQualityContext);
   const stations = useContext(StationsContext);
-  const { activeStation, changeActiveStation } =
-    useContext(ActiveStationContext);
+  const { changeActiveStation } = useContext(ActiveStationContext);
+  const { changeActiveStationAutomatic } = useContext(
+    ActiveStationAutomaticContext
+  );
 
-  const { openCloseStationPanel, changeOpenCloseStationPanel } = useContext(
+  const { changeOpenCloseStationPanel } = useContext(
     OpenCloseStationPanelContext
   );
 
+  const { changeOpenCloseStationAutomaticPanel } = useContext(
+    OpenCloseStationAutomaticPanelContext
+  );
+
+  console.log(stations);
   return (
     <>
       <LayersControl.Overlay checked name={layerNameAirQuality}>
@@ -145,62 +111,129 @@ const StationsLayer = () => {
             showCoverageOnHover={false}
             iconCreateFunction={createClusterCustomIcon}
           >
-            {stationsAirQuality["estaciones"].map((station) => (
-              <Marker
-                key={station.codigo}
-                position={[station.latitud, station.longitud]}
-                eventHandlers={{
-                  click: (e) => {
-                    changeOpenCloseStationPanel(true);
-                    changeActiveStation(station.codigo);
-                  },
-                }}
-                icon={IconsAirQuality[station["categoria"]]}
-              ></Marker>
-            ))}
+            {stationsAirQuality &&
+              stationsAirQuality["estaciones"].map((station) => {
+                return (
+                  <>
+                    <Marker
+                      key={station.codigo}
+                      position={[station.latitud, station.longitud]}
+                      eventHandlers={{
+                        click: (e) => {
+                          changeOpenCloseStationPanel(true);
+                          changeOpenCloseStationAutomaticPanel(false);
+                          changeActiveStation(null);
+                          changeActiveStation(station.codigo);
+                          changeActiveStationAutomatic(null);
+                        },
+                      }}
+                      icon={IconsAirQuality[station["categoria"]]}
+                    ></Marker>
+                  </>
+                );
+              })}
           </MarkerClusterGroup>
         </LayerGroup>
       </LayersControl.Overlay>
 
-      {/* <LayersControl.Overlay checked name={layerName}>
-        <LayerGroup name={layerName}>
+      <LayersControl.Overlay checked name={"Red pluviográfica"}>
+        <LayerGroup name={"Red pluviográfica"}>
           <MarkerClusterGroup
             showCoverageOnHover={false}
             iconCreateFunction={createClusterCustomIcon}
           >
-            {stations.features.map((station) => (
-              <Marker
-                key={station.codigo}
-                position={[
-                  station.latitud,
-                  station.longitud,
-                ]}
-                onClick={() => {
-                  setActiveStation(station);
-                }}
-                icon={icon}
-              >
-                <Popup
-                  position={[
-                    station.latitud,
-                    station.longitud,
-                  ]}
-                  onClose={() => {
-                    setActiveStation(null);
-                  }}
-                >
-                  <div>
-                    <h6>{station.properties.tipo}</h6>
-                  // <p>Level: {station.properties.level}</p>
-                  // <p>Male: {station.properties.male}</p>
-                  // <p>Female: {station.properties.female}</p>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
+            {stations["estaciones"] &&
+              stations["estaciones"]
+                .filter((x) => x["tipo"] === 1)
+                .map((station) => {
+                  return (
+                    <>
+                      <Marker
+                        key={station.codigo}
+                        position={[station.latitud, station.longitud]}
+                        eventHandlers={{
+                          click: (e) => {
+                            changeOpenCloseStationAutomaticPanel(true);
+                            changeOpenCloseStationPanel(false);
+                            changeActiveStationAutomatic(null);
+                            changeActiveStationAutomatic(station.codigo);
+                            changeActiveStation(null);
+                          },
+                        }}
+                        icon={Iconos[station["umbral"]]}
+                      ></Marker>
+                    </>
+                  );
+                })}
           </MarkerClusterGroup>
         </LayerGroup>
-      </LayersControl.Overlay> */}
+      </LayersControl.Overlay>
+
+      <LayersControl.Overlay checked name={"Red Nivel"}>
+        <LayerGroup name={"Red Nivel"}>
+          <MarkerClusterGroup
+            showCoverageOnHover={false}
+            iconCreateFunction={createClusterCustomIcon}
+          >
+            {stations["estaciones"] &&
+              stations["estaciones"]
+                .filter((x) => x["tipo"] === 2)
+                .map((station) => {
+                  return (
+                    <>
+                      <Marker
+                        key={station.codigo}
+                        position={[station.latitud, station.longitud]}
+                        eventHandlers={{
+                          click: (e) => {
+                            changeOpenCloseStationAutomaticPanel(true);
+                            changeOpenCloseStationPanel(false);
+                            changeActiveStationAutomatic(null);
+                            changeActiveStationAutomatic(station.codigo);
+                            changeActiveStation(null);
+                          },
+                        }}
+                        icon={Iconos[station["umbral"]]}
+                      ></Marker>
+                    </>
+                  );
+                })}
+          </MarkerClusterGroup>
+        </LayerGroup>
+      </LayersControl.Overlay>
+
+      <LayersControl.Overlay checked name={"Red Meteorológica"}>
+        <LayerGroup name={"Red Meteorológica"}>
+          <MarkerClusterGroup
+            showCoverageOnHover={false}
+            iconCreateFunction={createClusterCustomIcon}
+          >
+            {stations["estaciones"] &&
+              stations["estaciones"]
+                .filter((x) => x["tipo"] === 8)
+                .map((station) => {
+                  return (
+                    <>
+                      <Marker
+                        key={station.codigo}
+                        position={[station.latitud, station.longitud]}
+                        eventHandlers={{
+                          click: (e) => {
+                            changeOpenCloseStationAutomaticPanel(true);
+                            changeOpenCloseStationPanel(false);
+                            changeActiveStationAutomatic(null);
+                            changeActiveStationAutomatic(station.codigo);
+                            changeActiveStation(null);
+                          },
+                        }}
+                        icon={Iconos[station["umbral"]]}
+                      ></Marker>
+                    </>
+                  );
+                })}
+          </MarkerClusterGroup>
+        </LayerGroup>
+      </LayersControl.Overlay>
     </>
   );
 };

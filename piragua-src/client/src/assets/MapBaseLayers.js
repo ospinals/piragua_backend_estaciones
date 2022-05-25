@@ -8,7 +8,7 @@ export const baseLayersData = [
     maxNativeZoom: false,
   },
   {
-    url: "http://services.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}",
+    url: "https://services.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}",
     attribution:
       '&copy; <a href="https://stamen.com/open-source/">Stamen</a> contributors',
     name: "Terreno",

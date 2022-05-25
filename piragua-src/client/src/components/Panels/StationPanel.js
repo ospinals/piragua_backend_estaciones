@@ -83,16 +83,6 @@ const StationPanel = () => {
     "Muy dañina para la salud": "/iconos-aire/morado.svg",
   };
 
-  const AirQualityEvaluation = {
-    "-": "No Data",
-    Buena: "Buena",
-    Moderada: "Moderada",
-    Peligrosa: "Peligrosa",
-    "Dañina para la salud": "Dañina",
-    "Dañina - Grupos sensibles": "Grupos sensibles",
-    "Muy dañina para la salud": "Muy dañina",
-  };
-
   const AirQualityColor = {
     "-": "nodata",
     Buena: "green",
@@ -101,6 +91,16 @@ const StationPanel = () => {
     "Dañina para la salud": "red",
     "Dañina - Grupos sensibles": "orange",
     "Muy dañina para la salud": "purple",
+  };
+
+  const AirQualityEvaluation = {
+    "-": "No Data",
+    Buena: "Buena",
+    Moderada: "Moderada",
+    Peligrosa: "Peligrosa",
+    "Dañina para la salud": "Dañina",
+    "Dañina - Grupos sensibles": "Grupos sensibles",
+    "Muy dañina para la salud": "Muy dañina",
   };
 
   const evaluateIcaPM25 = (x) => {

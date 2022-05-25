@@ -1,0 +1,7 @@
+<OGRVRTDataSource>
+    <OGRVRTLayer name="ppt">
+        <SrcDataSource>f"2022-05-22.csv"</SrcDataSource>
+        <GeometryType>wkbPoint</GeometryType>
+        <GeometryField encoding="PointFromColumns" x="lon" y="lat" z="ppt"/>
+    </OGRVRTLayer>
+</OGRVRTDataSource>

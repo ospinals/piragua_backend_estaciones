@@ -18,7 +18,6 @@ const LegendControl = () => {
   );
 
   const handleClick = (e) => {
-    console.log("click");
     changeOpenCloseLegendPanel(true);
   };
 

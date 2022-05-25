@@ -3,7 +3,7 @@ import { MapContainer, LayersControl } from "react-leaflet";
 import useSWR from "swr";
 import axios from "axios";
 import { Alert, Spinner } from "react-bootstrap";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import BaseLayers from "../BaseLayers/BaseLayers";
 import { baseLayersData } from "../../assets/MapBaseLayers";
@@ -19,12 +19,16 @@ import ActiveStationContext from "../../Context/ActiveStationContext";
 import StationsContext from "../../Context/StationsContext";
 import MapContext from "../../Context/MapContext";
 import OpenCloseStationPanelContext from "../../Context/OpenCloseStationPanelContext";
+import OpenCloseStationAutomaticPanelContext from "../../Context/OpenCloseStationAutomaticPanelContext";
+import ActiveStationAutomaticContext from "../../Context/ActiveStationAutomaticContext";
 import AirQualityTimeSeriesContext from "../../Context/AirQualityTimeSeriesContext";
 import OpenClosePlotPanelContext from "../../Context/OpenClosePlotPanelContext";
 import OpenCloseLegendPanelContext from "../../Context/OpenCloseLegendPanelContext";
 import AirQualityActiveStationParametersContext from "../../Context/AirQualityActiveStationParametersContext";
 import TimeWindowContext from "../../Context/TimeWindowContext";
+import TimeWindowAutomaticContext from "../../Context/TimeWindowAutomaticContext";
 import LegendPanel from "../Panels/LegendPanel";
+import StationPanelAutomatic from "../Panels/StationPanelAutomatic";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -35,6 +39,9 @@ const MapContent = () => {
 
   const [activeStation, setActiveStation] = useState(null);
   const changeActiveStation = (x) => setActiveStation(x);
+
+  const [activeStationAutomatic, setActiveStationAutomatic] = useState(null);
+  const changeActiveStationAutomatic = (x) => setActiveStationAutomatic(x);
 
   const [
     airQualityActiveStationParameters,
@@ -49,6 +56,11 @@ const MapContent = () => {
   const [openCloseStationPanel, setOpenCloseStationPanel] = useState(false);
   const changeOpenCloseStationPanel = (x) => setOpenCloseStationPanel(x);
 
+  const [openCloseStationAutomaticPanel, setOpenCloseStationAutomaticPanel] =
+    useState(false);
+  const changeOpenCloseStationAutomaticPanel = (x) =>
+    setOpenCloseStationAutomaticPanel(x);
+
   const [openClosePlotPanel, setOpenClosePlotPanel] = useState(false);
   const changeOpenClosePlotPanel = (x) => setOpenClosePlotPanel(x);
 
@@ -58,18 +70,24 @@ const MapContent = () => {
   const [timeWindow, setTimeWindow] = useState("24h");
   const changeTimeWindow = (x) => setTimeWindow(x);
 
+  const [timeWindowAutomatic, setTimeWindowAutomatic] = useState("24h");
+  const changeTimeWindowAutomatic = (x) => setTimeWindowAutomatic(x);
+
   /// Get Datetime to know when to fetch data again and re render the app
-  const [state, setState] = useState({ num: 0 });
-  const counter = useRef(0);
+  const [state, setState] = React.useState({ num: 0 });
+  const counter = React.useRef(0);
 
-  // useEffect(() => {
-  //   if (counter.current < 10) {
-  //     counter.current += 1;
-  //     const timer = setTimeout(() => setState({ num: state.num + 1 }), 1000);
+  React.useEffect(() => {
+    if (counter.current < 10) {
+      counter.current += 1;
+      const timer = setTimeout(
+        () => setState({ num: state.num + 1 }),
+        30 * 60 * 1000
+      );
 
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [state]);
+      return () => clearTimeout(timer);
+    }
+  }, [state]);
 
   //// Load Data for app
 
@@ -88,9 +106,8 @@ const MapContent = () => {
 
   const { data: dataStationsAirQuality, error: errorStationsAirQuality } =
     useSWR(
-      "https://www.piraguacorantioquia.com.co/api/v1/estaciones-aire?tipo=198",
-      fetcher,
-      { refreshInterval: 1000 }
+      `https://www.piraguacorantioquia.com.co/api/v1/estaciones-aire?tipo=198&random=${state.num}`,
+      fetcher
     );
 
   const stationsAirQuality =
@@ -98,14 +115,12 @@ const MapContent = () => {
       ? dataStationsAirQuality
       : {};
 
-  // const { data: dataStations, error: errorStations } = useSWR(
-  //   "/api/v1/estaciones",
-  //   fetcher
-  // );
+  const { data: dataStations, error: errorStations } = useSWR(
+    "https://www.piraguacorantioquia.com.co/api/v1/estaciones",
+    fetcher
+  );
 
-  // const stations = dataStations && !errorStations ? dataStations : {};
-
-  const stations = null;
+  const stations = dataStations && !errorStations ? dataStations : {};
 
   // const { data: dataIcaStations, error: errorIcaStations } = useSWR(
   //   "/api/v1/estaciones_aire/ica_estaciones?fecha=2021-09-01T09:53:00",
@@ -124,14 +139,15 @@ const MapContent = () => {
     return (
       <Spinner
         animation="border"
-        variant="primary"
+        // variant="primary"
         role="status"
         style={{
           width: "300px",
           height: "300px",
           margin: "auto",
-          margintop: "20%",
+          marginTop: "50%",
           display: "block",
+          color: "#6394cf",
         }}
       />
     );
@@ -143,62 +159,86 @@ const MapContent = () => {
       <ActiveStationContext.Provider
         value={{ activeStation, changeActiveStation }}
       >
-        <OpenCloseLegendPanelContext.Provider
-          value={{ openCloseLegendPanel, changeOpenCloseLegendPanel }}
+        <ActiveStationAutomaticContext.Provider
+          value={{ activeStationAutomatic, changeActiveStationAutomatic }}
         >
-          <OpenCloseStationPanelContext.Provider
-            value={{ openCloseStationPanel, changeOpenCloseStationPanel }}
+          <OpenCloseLegendPanelContext.Provider
+            value={{ openCloseLegendPanel, changeOpenCloseLegendPanel }}
           >
-            <OpenClosePlotPanelContext.Provider
-              value={{ openClosePlotPanel, changeOpenClosePlotPanel }}
+            <OpenCloseStationAutomaticPanelContext.Provider
+              value={{
+                openCloseStationAutomaticPanel,
+                changeOpenCloseStationAutomaticPanel,
+              }}
             >
-              <TimeWindowContext.Provider
-                value={{ timeWindow, changeTimeWindow }}
+              <OpenCloseStationPanelContext.Provider
+                value={{ openCloseStationPanel, changeOpenCloseStationPanel }}
               >
-                {/* <StationsContext.Provider value={stations}> */}
-                <AirQualityActiveStationParametersContext.Provider
-                  value={{
-                    airQualityActiveStationParameters,
-                    changeAirQualityActiveStationParameters,
-                  }}
+                <OpenClosePlotPanelContext.Provider
+                  value={{ openClosePlotPanel, changeOpenClosePlotPanel }}
                 >
-                  <StationsAirQualityContext.Provider
-                    value={stationsAirQuality}
+                  <TimeWindowAutomaticContext.Provider
+                    value={{ timeWindowAutomatic, changeTimeWindowAutomatic }}
                   >
-                    <AirQualityTimeSeriesContext.Provider
-                      value={{
-                        airQualityTimeSeries,
-                        changeAirQualityTimeSeries,
-                      }}
+                    <TimeWindowContext.Provider
+                      value={{ timeWindow, changeTimeWindow }}
                     >
-                      <MapContainer
-                        center={position}
-                        zoom={zoom}
-                        whenCreated={setMap}
-                      >
-                        <LayersControl>
-                          <BaseLayers baseLayerData={baseLayersData} />
-                          <StationsLayer />
-                          <PolygonLayer
-                            layerData={polygonsTerritoriales}
-                            layerName="Territoriales"
-                            reversePolygon={true}
-                          />
-                        </LayersControl>
-                        <LocateControl />
-                        <LegendControl />
-                        {activeStation && <StationPanel />}
-                        {activeStation && timeWindow && <PlotsPanel />}
-                        <LegendPanel />
-                      </MapContainer>
-                    </AirQualityTimeSeriesContext.Provider>
-                  </StationsAirQualityContext.Provider>
-                </AirQualityActiveStationParametersContext.Provider>
-                {/* </StationsContext.Provider> */}
-              </TimeWindowContext.Provider>
-            </OpenClosePlotPanelContext.Provider>
-          </OpenCloseStationPanelContext.Provider>
-        </OpenCloseLegendPanelContext.Provider>
+                      <StationsContext.Provider value={stations}>
+                        <AirQualityActiveStationParametersContext.Provider
+                          value={{
+                            airQualityActiveStationParameters,
+                            changeAirQualityActiveStationParameters,
+                          }}
+                        >
+                          <StationsAirQualityContext.Provider
+                            value={stationsAirQuality}
+                          >
+                            <AirQualityTimeSeriesContext.Provider
+                              value={{
+                                airQualityTimeSeries,
+                                changeAirQualityTimeSeries,
+                              }}
+                            >
+                              <MapContainer
+                                center={position}
+                                zoom={zoom}
+                                whenCreated={setMap}
+                                touchZoom={true}
+                                doubleClickZoom={true}
+                                scrollWheelZoom={true}
+                                dragging={true}
+                                animate={true}
+                                easeLinearity={0.35}
+                              >
+                                <LayersControl>
+                                  <BaseLayers baseLayerData={baseLayersData} />
+                                  <StationsLayer />
+                                  <PolygonLayer
+                                    layerData={polygonsTerritoriales}
+                                    layerName="Territoriales"
+                                    reversePolygon={true}
+                                  />
+                                </LayersControl>
+                                <LocateControl />
+                                <LegendControl />
+                                {activeStation && <StationPanel />}
+                                {activeStationAutomatic && (
+                                  <StationPanelAutomatic />
+                                )}
+                                {activeStation && timeWindow && <PlotsPanel />}
+                                <LegendPanel />
+                              </MapContainer>
+                            </AirQualityTimeSeriesContext.Provider>
+                          </StationsAirQualityContext.Provider>
+                        </AirQualityActiveStationParametersContext.Provider>
+                      </StationsContext.Provider>
+                    </TimeWindowContext.Provider>
+                  </TimeWindowAutomaticContext.Provider>
+                </OpenClosePlotPanelContext.Provider>
+              </OpenCloseStationPanelContext.Provider>
+            </OpenCloseStationAutomaticPanelContext.Provider>
+          </OpenCloseLegendPanelContext.Provider>
+        </ActiveStationAutomaticContext.Provider>
       </ActiveStationContext.Provider>
     </MapContext.Provider>
   );

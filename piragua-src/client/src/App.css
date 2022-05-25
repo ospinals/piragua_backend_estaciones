@@ -151,7 +151,7 @@
   justify-self: stretch;
   align-self: start;
   grid-area: dropdown-station-variables;
-  width: 120% !important;
+  width: 150% !important;
   font-size: medium;
   top: 10px !important;
   position: absolute !important;
@@ -176,10 +176,14 @@ a {
   align-self: end;
   grid-area: station-panel-variable;
   color: #fff;
-  font-size: 140%;
+  font-size: 120%;
+  max-width: 300%;
+  font-weight: bold;
   height: 70%;
+  white-space: nowrap;
   top: 50%;
   position: absolute;
+  text-align: center;
 }
 
 .station-panel-name {
@@ -187,7 +191,7 @@ a {
   align-self: end;
   grid-area: station-panel-name;
   color: #6394cf;
-  font-size: 130%;
+  font-size: 140%;
   width: 300%;
   position: absolute !important;
   bottom: 12%;
@@ -220,7 +224,7 @@ a {
   justify-self: end;
   grid-area: station-panel-value;
   color: #6394cf;
-  font-size: 600%;
+  font-size: 430%;
   align-self: center;
 }
 
@@ -229,7 +233,7 @@ a {
   align-self: start;
   grid-area: station-panel-units;
   color: #6394cf;
-  font-size: 150%;
+  font-size: 160%;
   height: 60%;
   width: 200%;
   align-self: center;
@@ -285,6 +289,30 @@ a {
 .brown {
   background-color: #662809;
   border-color: #662809;
+  border-radius: 25px;
+  border-style: solid;
+  text-align: center;
+}
+
+.lightblue {
+  background-color: #1499db;
+  border-color: #1499db;
+  border-radius: 25px;
+  border-style: solid;
+  text-align: center;
+}
+
+.blue {
+  background-color: #0c5ea3;
+  border-color: #0c5ea3;
+  border-radius: 25px;
+  border-style: solid;
+  text-align: center;
+}
+
+.grey {
+  background-color: #535353;
+  border-color: #535353;
   border-radius: 25px;
   border-style: solid;
   text-align: center;
