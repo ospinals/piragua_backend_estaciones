@@ -1,7 +1,7 @@
-import React from "react";
-import { useContext } from "react";
+import React, { useState } from "react";
+import { useContext, useEffect } from "react";
 import MarkerClusterGroup from "react-leaflet-markercluster";
-import { Marker, LayersControl, LayerGroup } from "react-leaflet";
+import { Marker, LayersControl, LayerGroup, useMap } from "react-leaflet";
 
 import { Icon } from "leaflet";
 import L from "leaflet";
@@ -98,142 +98,184 @@ const StationsLayer = () => {
     OpenCloseStationPanelContext
   );
 
+  const map = useMap();
+
   const { changeOpenCloseStationAutomaticPanel } = useContext(
     OpenCloseStationAutomaticPanelContext
   );
 
   console.log(stations);
+
+  const [checkedAire, setCheckedAire] = useState(true);
+  const [checkedPluvio, setCheckedPluvio] = useState(true);
+  const [checkedNivel, setCheckedNivel] = useState(true);
+  const [checkedMeteo, setCheckedMeteo] = useState(true);
+  // const [checked, setCheckedPluvio] = useState(true);
+
+  useEffect(() => {
+    map.on("overlayremove", (e) => {
+      //do whatever
+      console.log(e.name);
+      switch (e.name) {
+        case "Red calidad aire":
+          setCheckedAire(false);
+          break;
+        case "Red pluviográfica":
+          setCheckedPluvio(false);
+          break;
+        case "Red Nivel":
+          setCheckedNivel(false);
+          break;
+        case "Red Meteorológica":
+          setCheckedMeteo(false);
+          break;
+        default:
+          return;
+      }
+    });
+
+    map.on("overlayadd", (e) => {
+      //do whatever
+      console.log(e.name);
+      switch (e.name) {
+        case "Red calidad aire":
+          setCheckedAire(true);
+          break;
+        case "Red pluviográfica":
+          setCheckedPluvio(true);
+          break;
+        case "Red Nivel":
+          setCheckedNivel(true);
+          break;
+        case "Red Meteorológica":
+          setCheckedMeteo(true);
+          break;
+        default:
+          return;
+      }
+    });
+  }, []);
+
   return (
     <>
       <LayersControl.Overlay checked name={layerNameAirQuality}>
-        <LayerGroup name={layerNameAirQuality}>
-          <MarkerClusterGroup
-            showCoverageOnHover={false}
-            iconCreateFunction={createClusterCustomIcon}
-          >
-            {stationsAirQuality &&
-              stationsAirQuality["estaciones"].map((station) => {
-                return (
-                  <>
-                    <Marker
-                      key={station.codigo}
-                      position={[station.latitud, station.longitud]}
-                      eventHandlers={{
-                        click: (e) => {
-                          changeOpenCloseStationPanel(true);
-                          changeOpenCloseStationAutomaticPanel(false);
-                          changeActiveStation(null);
-                          changeActiveStation(station.codigo);
-                          changeActiveStationAutomatic(null);
-                        },
-                      }}
-                      icon={IconsAirQuality[station["categoria"]]}
-                    ></Marker>
-                  </>
-                );
-              })}
-          </MarkerClusterGroup>
-        </LayerGroup>
+        <LayerGroup name={layerNameAirQuality}></LayerGroup>
       </LayersControl.Overlay>
 
       <LayersControl.Overlay checked name={"Red pluviográfica"}>
-        <LayerGroup name={"Red pluviográfica"}>
-          <MarkerClusterGroup
-            showCoverageOnHover={false}
-            iconCreateFunction={createClusterCustomIcon}
-          >
-            {stations["estaciones"] &&
-              stations["estaciones"]
-                .filter((x) => x["tipo"] === 1)
-                .map((station) => {
-                  return (
-                    <>
-                      <Marker
-                        key={station.codigo}
-                        position={[station.latitud, station.longitud]}
-                        eventHandlers={{
-                          click: (e) => {
-                            changeOpenCloseStationAutomaticPanel(true);
-                            changeOpenCloseStationPanel(false);
-                            changeActiveStationAutomatic(null);
-                            changeActiveStationAutomatic(station.codigo);
-                            changeActiveStation(null);
-                          },
-                        }}
-                        icon={Iconos[station["umbral"]]}
-                      ></Marker>
-                    </>
-                  );
-                })}
-          </MarkerClusterGroup>
-        </LayerGroup>
+        <LayerGroup name={"Red pluviográfica"}></LayerGroup>
       </LayersControl.Overlay>
 
       <LayersControl.Overlay checked name={"Red Nivel"}>
-        <LayerGroup name={"Red Nivel"}>
-          <MarkerClusterGroup
-            showCoverageOnHover={false}
-            iconCreateFunction={createClusterCustomIcon}
-          >
-            {stations["estaciones"] &&
-              stations["estaciones"]
-                .filter((x) => x["tipo"] === 2)
-                .map((station) => {
-                  return (
-                    <>
-                      <Marker
-                        key={station.codigo}
-                        position={[station.latitud, station.longitud]}
-                        eventHandlers={{
-                          click: (e) => {
-                            changeOpenCloseStationAutomaticPanel(true);
-                            changeOpenCloseStationPanel(false);
-                            changeActiveStationAutomatic(null);
-                            changeActiveStationAutomatic(station.codigo);
-                            changeActiveStation(null);
-                          },
-                        }}
-                        icon={Iconos[station["umbral"]]}
-                      ></Marker>
-                    </>
-                  );
-                })}
-          </MarkerClusterGroup>
-        </LayerGroup>
+        <LayerGroup name={"Red Nivel"}></LayerGroup>
       </LayersControl.Overlay>
 
       <LayersControl.Overlay checked name={"Red Meteorológica"}>
-        <LayerGroup name={"Red Meteorológica"}>
-          <MarkerClusterGroup
-            showCoverageOnHover={false}
-            iconCreateFunction={createClusterCustomIcon}
-          >
-            {stations["estaciones"] &&
-              stations["estaciones"]
-                .filter((x) => x["tipo"] === 8)
-                .map((station) => {
-                  return (
-                    <>
-                      <Marker
-                        key={station.codigo}
-                        position={[station.latitud, station.longitud]}
-                        eventHandlers={{
-                          click: (e) => {
-                            changeOpenCloseStationAutomaticPanel(true);
-                            changeOpenCloseStationPanel(false);
-                            changeActiveStationAutomatic(null);
-                            changeActiveStationAutomatic(station.codigo);
-                            changeActiveStation(null);
-                          },
-                        }}
-                        icon={Iconos[station["umbral"]]}
-                      ></Marker>
-                    </>
-                  );
-                })}
-          </MarkerClusterGroup>
-        </LayerGroup>
+        <LayerGroup name={"Red Meteorológica"}></LayerGroup>
       </LayersControl.Overlay>
+
+      <MarkerClusterGroup
+        showCoverageOnHover={false}
+        iconCreateFunction={createClusterCustomIcon}
+      >
+        {checkedAire &&
+          stationsAirQuality &&
+          stationsAirQuality["estaciones"].map((station) => {
+            return (
+              <>
+                <Marker
+                  key={station.codigo}
+                  position={[station.latitud, station.longitud]}
+                  eventHandlers={{
+                    click: (e) => {
+                      changeOpenCloseStationPanel(true);
+                      changeOpenCloseStationAutomaticPanel(false);
+                      changeActiveStation(null);
+                      changeActiveStation(station.codigo);
+                      changeActiveStationAutomatic(null);
+                    },
+                  }}
+                  icon={IconsAirQuality[station["categoria"]]}
+                ></Marker>
+              </>
+            );
+          })}
+
+        {checkedMeteo &&
+          stations["estaciones"] &&
+          stations["estaciones"]
+            .filter((x) => x["tipo"] === 8)
+            .map((station) => {
+              return (
+                <>
+                  <Marker
+                    key={station.codigo}
+                    position={[station.latitud, station.longitud]}
+                    eventHandlers={{
+                      click: (e) => {
+                        changeOpenCloseStationAutomaticPanel(true);
+                        changeOpenCloseStationPanel(false);
+                        changeActiveStationAutomatic(null);
+                        changeActiveStationAutomatic(station.codigo);
+                        changeActiveStation(null);
+                      },
+                    }}
+                    icon={Iconos[station["umbral"]]}
+                  ></Marker>
+                </>
+              );
+            })}
+
+        {checkedNivel &&
+          stations["estaciones"] &&
+          stations["estaciones"]
+            .filter((x) => x["tipo"] === 2)
+            .map((station) => {
+              return (
+                <>
+                  <Marker
+                    key={station.codigo}
+                    position={[station.latitud, station.longitud]}
+                    eventHandlers={{
+                      click: (e) => {
+                        changeOpenCloseStationAutomaticPanel(true);
+                        changeOpenCloseStationPanel(false);
+                        changeActiveStationAutomatic(null);
+                        changeActiveStationAutomatic(station.codigo);
+                        changeActiveStation(null);
+                      },
+                    }}
+                    icon={Iconos[station["umbral"]]}
+                  ></Marker>
+                </>
+              );
+            })}
+
+        {checkedPluvio &&
+          stations["estaciones"] &&
+          stations["estaciones"]
+            .filter((x) => x["tipo"] === 1)
+            .map((station) => {
+              return (
+                <>
+                  <Marker
+                    key={station.codigo}
+                    position={[station.latitud, station.longitud]}
+                    eventHandlers={{
+                      click: (e) => {
+                        changeOpenCloseStationAutomaticPanel(true);
+                        changeOpenCloseStationPanel(false);
+                        changeActiveStationAutomatic(null);
+                        changeActiveStationAutomatic(station.codigo);
+                        changeActiveStation(null);
+                      },
+                    }}
+                    icon={Iconos[station["umbral"]]}
+                  ></Marker>
+                </>
+              );
+            })}
+      </MarkerClusterGroup>
     </>
   );
 };

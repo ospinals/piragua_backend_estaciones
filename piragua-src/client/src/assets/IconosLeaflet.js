@@ -421,7 +421,7 @@ const CalidadAguaGris = L.icon({
 // ============================================
 
 const Meteorologia = L.icon({
-  iconUrl: "/redes_nuevo/images/social.png",
+  iconUrl: "/redes_nuevo/images/meteo.svg",
 
   iconSize: [33.6, 41.6],
   iconAnchor: [16.8, 41.6],

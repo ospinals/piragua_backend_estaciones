@@ -116,7 +116,7 @@ const CalidadAguaGris = "/redes_nuevo/images/calidad-agua-gris.png";
 
 // ============================================
 
-const Meteorologia = "/redes_nuevo/images/social.png";
+const Meteorologia = "/redes_nuevo/images/meteo.svg";
 
 // ============================================
 

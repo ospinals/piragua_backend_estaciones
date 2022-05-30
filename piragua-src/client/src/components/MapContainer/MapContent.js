@@ -3,7 +3,7 @@ import { MapContainer, LayersControl } from "react-leaflet";
 import useSWR from "swr";
 import axios from "axios";
 import { Alert, Spinner } from "react-bootstrap";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 import BaseLayers from "../BaseLayers/BaseLayers";
 import { baseLayersData } from "../../assets/MapBaseLayers";
@@ -35,7 +35,7 @@ const fetcher = (url) => axios.get(url).then((res) => res.data);
 const MapContent = () => {
   const position = [6.2366666666667, -75.580277777778];
   const zoom = 9;
-  const [map, setMap] = useState(null);
+  const [map, setMap] = useState(1);
 
   const [activeStation, setActiveStation] = useState(null);
   const changeActiveStation = (x) => setActiveStation(x);

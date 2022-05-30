@@ -659,3 +659,76 @@ hr {
   height: 40px;
   padding-bottom: 6px;
 }
+
+.leaflet-control-container .leaflet-top,
+.leaflet-control-container .leaflet-bottom {
+  will-change: transform;
+}
+
+.customMarkerMeteo {
+  background-image: url(/public/redes_nuevo/images/meteo.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.8;
+}
+
+.customMarkerMeteo span {
+  display: block;
+  /* margin-left: 38%; */
+  text-align: center;
+  margin-top: 15%;
+  color: #000;
+  font-size: x-large;
+}
+
+.customMarkerPluvio {
+  background-image: url(/public/iconos-lluvia/azulclaro.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.8;
+}
+
+.customMarkerPluvio span {
+  display: block;
+  /* margin-left: 38%; */
+  text-align: center;
+  margin-top: 15%;
+  color: #000;
+  font-size: x-large;
+}
+
+.customMarkerNivel {
+  background-image: url(/public/iconos-nivel/verde.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.8;
+}
+
+.customMarkerNivel span {
+  display: block;
+  /* margin-left: 38%; */
+  text-align: center;
+  margin-top: 15%;
+  color: #000;
+  font-size: x-large;
+}
+
+.customMarkerAire {
+  background-image: url(/public/iconos-aire/azulclaro.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.8;
+}
+
+.customMarkerAire span {
+  display: block;
+  /* margin-left: 38%; */
+  text-align: center;
+  margin-top: 15%;
+  color: #000;
+  font-size: x-large;
+}
