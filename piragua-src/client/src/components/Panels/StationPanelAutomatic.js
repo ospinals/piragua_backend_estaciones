@@ -27,7 +27,7 @@ const StationPanelAutomatic = () => {
   const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length;
 
   const stations = useContext(StationsContext);
-  const [variableValue, setVariableValue] = useState(null);
+  // const [variableValue, setVariableValue] = useState(null);
 
   const {
     airQualityActiveStationParameters,
@@ -68,17 +68,18 @@ const StationPanelAutomatic = () => {
   };
 
   const replaceNaN = (x) => {
-    if (typeof x === "string") {
-      return x;
-    } else if (isNaN(x) || x === 0) {
+    console.log(x);
+    if (isNaN(x) || x === 0) {
       return "-";
+    } else if (typeof x === "string") {
+      return x;
     } else return x;
   };
 
   const units = {
     Lluvia: "mm",
     Nivel: "m",
-    "Dir viento": "ºNorte",
+    "Dir viento": "Grados º",
     Humedad: "%",
     Radiación: "w/m2",
     Temp: "ºC",
@@ -193,6 +194,7 @@ const StationPanelAutomatic = () => {
       Lluvia: `estaciones/${activeStationAutomatic}/precipitacion?calidad=1&random=${1}`,
       Nivel: `estaciones/${activeStationAutomatic}/nivel?calidad=1&random=${1}`,
       Temp: `estaciones/${activeStationAutomatic}/meteorologia?&random=${1}`,
+      "Dir viento": `estaciones/${activeStationAutomatic}/meteorologia?&random=${1}`,
     };
 
     endPoint += queryVariable[variable];
@@ -213,15 +215,18 @@ const StationPanelAutomatic = () => {
     }
 
     const { data } = useSWR(endPoint, fetcher);
+
+    let variableValue;
+
     if (variable === "Lluvia") {
-      var variableValue = data
+      variableValue = data
         ? data["results"]
             .map((x) => parseFloat(x["muestra"]))
             .reduce((partialSum, a) => partialSum + a, 0)
             .toFixed(0)
         : null;
     } else if (variable === "Nivel") {
-      var variableValue = data
+      variableValue = data
         ? Math.max(
             0,
             ...data["results"]
@@ -230,18 +235,28 @@ const StationPanelAutomatic = () => {
           ).toFixed(1)
         : null;
     } else if (variable === "Temp") {
-      var variableValue = data
+      variableValue = data
         ? average(
             data["results"]
               .map((x) => parseFloat(x["temperatura"]))
               .filter((x) => x >= -50 && x < 100 && isFinite(x))
           ).toFixed(0)
         : null;
+    } else if (variable === "Dir viento") {
+      variableValue = data
+        ? average(
+            data["results"]
+              .map((x) => parseFloat(x["direccion_viento"]))
+              .filter((x) => x >= -998 && x <= 360 && isFinite(x))
+          ).toFixed(0)
+        : null;
     }
     console.log(data);
+    console.log(variableValue);
+
     return variableValue ? (
       <>
-        <div className="station-panel-value">{variableValue}</div>
+        <div className="station-panel-value">{replaceNaN(variableValue)}</div>
 
         <div
           className={

@@ -172,4 +172,12 @@ export const IconosPaths = {
   49: CalidadAguaAzul,
   50: CalidadAguaGris,
   51: Meteorologia,
+  52: Meteorologia,
+  53: Meteorologia,
+  54: Meteorologia,
+  55: Meteorologia,
+  56: Meteorologia,
+  57: Meteorologia,
+  58: Meteorologia,
+  59: Meteorologia,
 };

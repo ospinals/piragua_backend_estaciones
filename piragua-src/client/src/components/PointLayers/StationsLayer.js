@@ -104,7 +104,8 @@ const StationsLayer = () => {
     OpenCloseStationAutomaticPanelContext
   );
 
-  console.log(stations);
+  stations["estaciones"] &&
+    console.log(stations["estaciones"].filter((x) => x["tipo"] === 4));
 
   const [checkedAire, setCheckedAire] = useState(true);
   const [checkedPluvio, setCheckedPluvio] = useState(true);

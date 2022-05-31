@@ -117,6 +117,14 @@ const CalidadAguaGris = "/redes_nuevo/images/calidad-agua-gris.png";
 // ============================================
 
 const Meteorologia = "green";
+const MeteorologiaSinDatos = "lightblue";
+const MeterologiaViento = "blue";
+const MeteorologiaTempFria = "blue";
+const MeteorologiaTempFresca = "green";
+const MeteorologiaTempTemplada = "yellow";
+const MeteorologiaTempCalida = "orange";
+const MeteorologiaTempMuyCalida = "red";
+const MeteorologiaTempSinDatos = "lightblue";
 
 // ============================================
 
@@ -172,4 +180,12 @@ export const Colors = {
   49: CalidadAguaAzul,
   50: CalidadAguaGris,
   51: Meteorologia,
+  52: MeteorologiaSinDatos,
+  53: MeterologiaViento,
+  54: MeteorologiaTempFria,
+  55: MeteorologiaTempFresca,
+  56: MeteorologiaTempTemplada,
+  57: MeteorologiaTempCalida,
+  58: MeteorologiaTempMuyCalida,
+  59: MeteorologiaTempSinDatos,
 };

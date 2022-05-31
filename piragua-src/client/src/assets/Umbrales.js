@@ -45,13 +45,13 @@ const evaluateLluvia = (lluvia, timeWindow) => {
     if (lluvia <= 0) {
       return "Sin lluvia";
     } else if (lluvia <= 40) {
-      return "Lluvia baja";
+      return "Baja";
     } else if (lluvia <= 160) {
-      return "Lluvia moderada";
+      return "Moderada";
     } else if (lluvia <= 400) {
-      return "Lluvia alta";
+      return "Alta";
     } else {
-      return "Lluvia extrema";
+      return "Extrema";
     }
   }
 };
@@ -115,28 +115,45 @@ const evaluateNivel = (nivel, timeWindow) => {
 };
 
 const evaluateTemp = (temp, timeWindow) => {
-  if (timeWindow === "24h") {
-    if (temp <= 999) {
-      return "Media";
-    }
+  // if (temp > -100 && temp < 7) {
+  //   return "Muy fría";
+  // } else
+  if (temp >= -100 && temp < 13) {
+    return "Fría";
+  } else if (temp >= 13 && temp < 18) {
+    return "Fresca";
+  } else if (temp >= 18 && temp < 24) {
+    return "Templada";
+  } else if (temp >= 24 && temp < 29) {
+    return "Calida";
+  } else if (temp >= 29 && temp <= 60) {
+    return "Muy calida";
+  } else {
+    return "Sin datos";
   }
+};
 
-  if (timeWindow === "72h") {
-    if (temp <= 999) {
-      return "Media";
-    }
-  }
-
-  if (timeWindow === "7d") {
-    if (temp <= 999) {
-      return "Media";
-    }
-  }
-
-  if (timeWindow === "30d") {
-    if (temp <= 999) {
-      return "Media";
-    }
+const evaluateDirViento = (dir, timeWindow) => {
+  if (dir >= 0 && dir <= 20) {
+    return "Norte";
+  } else if (dir > 20 && dir < 70) {
+    return "Nor Este";
+  } else if (dir >= 70 && dir <= 110) {
+    return "Este";
+  } else if (dir > 110 && dir < 160) {
+    return "Sur Este";
+  } else if (dir >= 160 && dir <= 200) {
+    return "Sur";
+  } else if (dir > 200 && dir < 250) {
+    return "Sur Oeste";
+  } else if (dir >= 250 && dir <= 290) {
+    return "Oeste";
+  } else if (dir > 290 && dir < 340) {
+    return "Nor Oeste";
+  } else if (dir >= 340 && dir <= 360) {
+    return "Norte";
+  } else {
+    return "Sin datos";
   }
 };
 
@@ -144,4 +161,5 @@ export const evaluateVariableAutomatic = {
   Lluvia: evaluateLluvia,
   Nivel: evaluateNivel,
   Temp: evaluateTemp,
+  "Dir viento": evaluateDirViento,
 };

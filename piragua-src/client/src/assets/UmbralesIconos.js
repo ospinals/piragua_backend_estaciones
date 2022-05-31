@@ -115,28 +115,26 @@ const evaluateNivel = (nivel, timeWindow) => {
 };
 
 const evaluateTemp = (temp, timeWindow) => {
-  if (timeWindow === "24h") {
-    if (temp <= 999) {
-      return 51;
-    }
+  if (temp >= -100 && temp < 13) {
+    return 54;
+  } else if (temp >= 13 && temp < 18) {
+    return 55;
+  } else if (temp >= 18 && temp < 24) {
+    return 56;
+  } else if (temp >= 24 && temp < 29) {
+    return 57;
+  } else if (temp >= 29 && temp <= 60) {
+    return 58;
+  } else {
+    return 59;
   }
+};
 
-  if (timeWindow === "72h") {
-    if (temp <= 999) {
-      return 51;
-    }
-  }
-
-  if (timeWindow === "7d") {
-    if (temp <= 999) {
-      return 51;
-    }
-  }
-
-  if (timeWindow === "30d") {
-    if (temp <= 999) {
-      return 51;
-    }
+const evaluateDirViento = (dir, timeWindow) => {
+  if (dir >= 0 && dir <= 360) {
+    return 53;
+  } else {
+    return 52;
   }
 };
 
@@ -144,4 +142,5 @@ export const evaluateVariableAutomaticIcon = {
   Lluvia: evaluateLluvia,
   Nivel: evaluateNivel,
   Temp: evaluateTemp,
+  "Dir viento": evaluateDirViento,
 };

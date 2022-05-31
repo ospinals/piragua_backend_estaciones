@@ -203,11 +203,11 @@ const MapContent = () => {
                                 center={position}
                                 zoom={zoom}
                                 whenCreated={setMap}
-                                touchZoom={true}
+                                // touchZoom={true}
                                 doubleClickZoom={true}
                                 scrollWheelZoom={true}
                                 dragging={true}
-                                animate={true}
+                                // animate={true}
                                 easeLinearity={0.35}
                               >
                                 <LayersControl>
