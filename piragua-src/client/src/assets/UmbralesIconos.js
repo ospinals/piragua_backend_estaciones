@@ -138,9 +138,26 @@ const evaluateDirViento = (dir, timeWindow) => {
   }
 };
 
+const evaluateHumedad = (temp, timeWindow) => {
+  if (temp >= -100 && temp < 13) {
+    return 54;
+  } else if (temp >= 13 && temp < 18) {
+    return 55;
+  } else if (temp >= 18 && temp < 24) {
+    return 56;
+  } else if (temp >= 24 && temp < 29) {
+    return 57;
+  } else if (temp >= 29 && temp <= 60) {
+    return 58;
+  } else {
+    return 59;
+  }
+};
+
 export const evaluateVariableAutomaticIcon = {
   Lluvia: evaluateLluvia,
   Nivel: evaluateNivel,
   Temp: evaluateTemp,
   "Dir viento": evaluateDirViento,
+  Humedad: evaluateHumedad,
 };

@@ -185,7 +185,7 @@ const PlotsPanel = () => {
         .slice(0, 14)
         .replace("T", ":") + "00";
 
-    const endPoint = `https://www.piraguacorantioquia.com.co/api/v1/estaciones-aire/${activeStation}/parametros/${variable}?random=${1}&calidad=1&size=${288}&fecha__gte=${startDate}`;
+    const endPoint = `https://Geopiragua.corantioquia.gov.co/api/v1/estaciones-aire/${activeStation}/parametros/${variable}?random=${1}&calidad=1&size=${288}&fecha__gte=${startDate}`;
 
     const { data } = useSWR(endPoint, fetcher);
 

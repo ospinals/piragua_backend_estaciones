@@ -58,6 +58,7 @@ const StationPanelAutomatic = () => {
   };
 
   const handleClick = (e) => {
+    console.log("click");
     changeOpenCloseStationAutomaticPanel(false);
     changeActiveStationAutomatic(null);
   };
@@ -175,7 +176,7 @@ const StationPanelAutomatic = () => {
     timeWindowAutomatic,
   }) {
     var curDate = new Date();
-
+    console.log(variable);
     const timeWindow2Hours = {
       "24h": 36,
       "30d": 24 * 30,
@@ -188,13 +189,14 @@ const StationPanelAutomatic = () => {
       .toISOString()
       .slice(0, 10);
 
-    let endPoint = "https://www.piraguacorantioquia.com.co/api/v1/";
+    let endPoint = "https://Geopiragua.corantioquia.gov.co/api/v1/";
 
     const queryVariable = {
       Lluvia: `estaciones/${activeStationAutomatic}/precipitacion?calidad=1&random=${1}`,
       Nivel: `estaciones/${activeStationAutomatic}/nivel?calidad=1&random=${1}`,
       Temp: `estaciones/${activeStationAutomatic}/meteorologia?&random=${1}`,
       "Dir viento": `estaciones/${activeStationAutomatic}/meteorologia?&random=${1}`,
+      Humedad: `estaciones/${activeStationAutomatic}/meteorologia?&random=${1}`,
     };
 
     endPoint += queryVariable[variable];
@@ -247,10 +249,19 @@ const StationPanelAutomatic = () => {
         ? average(
             data["results"]
               .map((x) => parseFloat(x["direccion_viento"]))
-              .filter((x) => x >= -998 && x <= 360 && isFinite(x))
+              .filter((x) => x >= 0 && x <= 360 && isFinite(x))
+          ).toFixed(0)
+        : null;
+    } else if (variable === "Humedad") {
+      variableValue = data
+        ? average(
+            data["results"]
+              .map((x) => parseFloat(x["humedad_relativa"]))
+              .filter((x) => x >= 0 && x <= 100 && isFinite(x))
           ).toFixed(0)
         : null;
     }
+
     console.log(data);
     console.log(variableValue);
 

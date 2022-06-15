@@ -13,6 +13,7 @@ import StationPanel from "../Panels/StationPanel";
 import LegendControl from "./LegendControl";
 import PlotsPanel from "../Panels/PlotsPanel";
 import PolygonLayer from "../PolygonsLayer/Polygons";
+import ContourPolygons from "../Heatmap/ContourPolygons";
 
 import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
 import ActiveStationContext from "../../Context/ActiveStationContext";
@@ -29,6 +30,7 @@ import TimeWindowContext from "../../Context/TimeWindowContext";
 import TimeWindowAutomaticContext from "../../Context/TimeWindowAutomaticContext";
 import LegendPanel from "../Panels/LegendPanel";
 import StationPanelAutomatic from "../Panels/StationPanelAutomatic";
+import PrecipitationHeatmap from "../Heatmap/PrecipitationHeatmap";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -95,7 +97,7 @@ const MapContent = () => {
     data: dataPolygonsTerritoriales,
     error: errorDataPolygonsTerritoriales,
   } = useSWR(
-    "https://www.piraguacorantioquia.com.co/api/v1/localizacion/territoriales",
+    "https://Geopiragua.corantioquia.gov.co/api/v1/localizacion/territoriales",
     fetcher
   );
 
@@ -106,7 +108,7 @@ const MapContent = () => {
 
   const { data: dataStationsAirQuality, error: errorStationsAirQuality } =
     useSWR(
-      `https://www.piraguacorantioquia.com.co/api/v1/estaciones-aire?tipo=198&random=${state.num}`,
+      `https://Geopiragua.corantioquia.gov.co/api/v1/estaciones-aire?tipo=198&random=${state.num}`,
       fetcher
     );
 
@@ -116,14 +118,14 @@ const MapContent = () => {
       : {};
 
   const { data: dataStations, error: errorStations } = useSWR(
-    "https://www.piraguacorantioquia.com.co/api/v1/estaciones",
+    "https://Geopiragua.corantioquia.gov.co/api/v1/estaciones",
     fetcher
   );
 
   const stations = dataStations && !errorStations ? dataStations : {};
 
   // const { data: dataIcaStations, error: errorIcaStations } = useSWR(
-  //   "/api/v1/estaciones_aire/ica_estaciones?fecha=2021-09-01T09:53:00",
+  //   "https://Geopiragua.corantioquia.gov.co/api/v1/estaciones/api/v1/estaciones_aire/ica_estaciones?fecha=2021-09-01T09:53:00",
   //   fetcher
   // );
 
@@ -218,6 +220,8 @@ const MapContent = () => {
                                     layerName="Territoriales"
                                     reversePolygon={true}
                                   />
+                                  {/* <PrecipitationHeatmap /> */}
+                                  <ContourPolygons data={null} />
                                 </LayersControl>
                                 <LocateControl />
                                 <LegendControl />

@@ -490,4 +490,9 @@ export const Iconos = {
   57: Meteorologia,
   58: Meteorologia,
   59: Meteorologia,
+  60: Meteorologia,
+  61: Meteorologia,
+  62: Meteorologia,
+  63: Meteorologia,
+  64: Meteorologia,
 };

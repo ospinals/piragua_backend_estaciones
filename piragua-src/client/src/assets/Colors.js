@@ -125,7 +125,11 @@ const MeteorologiaTempTemplada = "yellow";
 const MeteorologiaTempCalida = "orange";
 const MeteorologiaTempMuyCalida = "red";
 const MeteorologiaTempSinDatos = "lightblue";
-
+const MeteorologiaHumedadMuySeco = "red";
+const MeteorologiaHumedadSeco = "oreange";
+const MeteorologiaHumedadModerada = "green";
+const MeteorologiaHumedadHumedo = "blue";
+const MeteorologiaHumedadSinDatos = "lightblue";
 // ============================================
 
 export const Colors = {
@@ -188,4 +192,9 @@ export const Colors = {
   57: MeteorologiaTempCalida,
   58: MeteorologiaTempMuyCalida,
   59: MeteorologiaTempSinDatos,
+  60: MeteorologiaHumedadMuySeco,
+  61: MeteorologiaHumedadSeco,
+  62: MeteorologiaHumedadModerada,
+  63: MeteorologiaHumedadHumedo,
+  64: MeteorologiaHumedadSinDatos,
 };

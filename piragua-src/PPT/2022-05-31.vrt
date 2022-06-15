@@ -1,0 +1,7 @@
+<OGRVRTDataSource>
+    <OGRVRTLayer name="dem">
+        <SrcDataSource>2022-05-31.csv</SrcDataSource>
+        <GeometryType>wkbPoint</GeometryType>
+        <GeometryField encoding="PointFromColumns" x="lon" y="lat" z="ppt"/>
+    </OGRVRTLayer>
+</OGRVRTDataSource>

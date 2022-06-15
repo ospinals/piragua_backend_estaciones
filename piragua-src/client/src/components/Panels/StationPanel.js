@@ -234,7 +234,7 @@ const StationPanel = () => {
 
   function DropDownVariables({ activeStation }) {
     const { data } = useSWR(
-      `https://www.piraguacorantioquia.com.co/api/v1/estaciones-aire/${activeStation}/parametros`,
+      `https://Geopiragua.corantioquia.gov.co/api/v1/estaciones-aire/${activeStation}/parametros`,
       fetcher
     );
 
