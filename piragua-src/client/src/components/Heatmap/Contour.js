@@ -11,6 +11,7 @@ L.Contour = L.GeoJSON.extend({
   initialize: function (data, options) {
     L.setOptions(this, options);
     this._layers = {};
+    // console.log(data);
 
     if (data) {
       var geojson = this._createContours(data);

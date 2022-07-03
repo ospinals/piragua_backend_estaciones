@@ -104,8 +104,8 @@ const StationsLayer = () => {
     OpenCloseStationAutomaticPanelContext
   );
 
-  stations["estaciones"] &&
-    console.log(stations["estaciones"].filter((x) => x["tipo"] === 4));
+  // stations["estaciones"] &&
+  //   console.log(stations["estaciones"].filter((x) => x["tipo"] === 4));
 
   const [checkedAire, setCheckedAire] = useState(true);
   const [checkedPluvio, setCheckedPluvio] = useState(true);
@@ -116,7 +116,7 @@ const StationsLayer = () => {
   useEffect(() => {
     map.on("overlayremove", (e) => {
       //do whatever
-      console.log(e.name);
+      // console.log(e.name);
       switch (e.name) {
         case "Red calidad aire":
           setCheckedAire(false);
@@ -137,7 +137,7 @@ const StationsLayer = () => {
 
     map.on("overlayadd", (e) => {
       //do whatever
-      console.log(e.name);
+      // console.log(e.name);
       switch (e.name) {
         case "Red calidad aire":
           setCheckedAire(true);

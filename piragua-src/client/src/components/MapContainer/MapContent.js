@@ -31,6 +31,12 @@ import TimeWindowAutomaticContext from "../../Context/TimeWindowAutomaticContext
 import LegendPanel from "../Panels/LegendPanel";
 import StationPanelAutomatic from "../Panels/StationPanelAutomatic";
 import PrecipitationHeatmap from "../Heatmap/PrecipitationHeatmap";
+import RasterLayer from "../Heatmap/Raster";
+import ClickValueContext from "../../Context/ClickValueContext";
+import OpenCloseClickValuePanelContext from "../../Context/OpenCloseClickValuePanelContext";
+import ClickValuePanel from "../Panels/ClickValuePanel";
+import PrecipitationControl from "./PrecipitationControl";
+import ShowPrecipitationContext from "../../Context/showPrecipitationContext";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -45,6 +51,12 @@ const MapContent = () => {
   const [activeStationAutomatic, setActiveStationAutomatic] = useState(null);
   const changeActiveStationAutomatic = (x) => setActiveStationAutomatic(x);
 
+  const [clickValue, setClickValue] = useState(null);
+  const changeClickValue = (x) => setClickValue(x);
+
+  const [showPrecipitation, setShowPrecipitation] = useState(false);
+  const changeShowPrecipitation = (x) => setShowPrecipitation(x);
+
   const [
     airQualityActiveStationParameters,
     setAirQualityActiveStationParameters,
@@ -57,6 +69,10 @@ const MapContent = () => {
 
   const [openCloseStationPanel, setOpenCloseStationPanel] = useState(false);
   const changeOpenCloseStationPanel = (x) => setOpenCloseStationPanel(x);
+
+  const [openCloseClickValuePanel, setOpenCloseClickValuePanel] =
+    useState(false);
+  const changeOpenCloseClickValuePanel = (x) => setOpenCloseClickValuePanel(x);
 
   const [openCloseStationAutomaticPanel, setOpenCloseStationAutomaticPanel] =
     useState(false);
@@ -118,7 +134,7 @@ const MapContent = () => {
       : {};
 
   const { data: dataStations, error: errorStations } = useSWR(
-    "https://Geopiragua.corantioquia.gov.co/api/v1/estaciones",
+    "https://geopiragua.corantioquia.gov.co/api/v1/estaciones",
     fetcher
   );
 
@@ -158,92 +174,119 @@ const MapContent = () => {
   //// Main Render of map content
   return (
     <MapContext.Provider value={map}>
-      <ActiveStationContext.Provider
-        value={{ activeStation, changeActiveStation }}
+      <ShowPrecipitationContext.Provider
+        value={{ showPrecipitation, changeShowPrecipitation }}
       >
-        <ActiveStationAutomaticContext.Provider
-          value={{ activeStationAutomatic, changeActiveStationAutomatic }}
+        <ActiveStationContext.Provider
+          value={{ activeStation, changeActiveStation }}
         >
-          <OpenCloseLegendPanelContext.Provider
-            value={{ openCloseLegendPanel, changeOpenCloseLegendPanel }}
-          >
-            <OpenCloseStationAutomaticPanelContext.Provider
-              value={{
-                openCloseStationAutomaticPanel,
-                changeOpenCloseStationAutomaticPanel,
-              }}
+          <ClickValueContext.Provider value={{ clickValue, changeClickValue }}>
+            <ActiveStationAutomaticContext.Provider
+              value={{ activeStationAutomatic, changeActiveStationAutomatic }}
             >
-              <OpenCloseStationPanelContext.Provider
-                value={{ openCloseStationPanel, changeOpenCloseStationPanel }}
+              <OpenCloseClickValuePanelContext.Provider
+                value={{
+                  openCloseClickValuePanel,
+                  changeOpenCloseClickValuePanel,
+                }}
               >
-                <OpenClosePlotPanelContext.Provider
-                  value={{ openClosePlotPanel, changeOpenClosePlotPanel }}
+                <OpenCloseLegendPanelContext.Provider
+                  value={{ openCloseLegendPanel, changeOpenCloseLegendPanel }}
                 >
-                  <TimeWindowAutomaticContext.Provider
-                    value={{ timeWindowAutomatic, changeTimeWindowAutomatic }}
+                  <OpenCloseStationAutomaticPanelContext.Provider
+                    value={{
+                      openCloseStationAutomaticPanel,
+                      changeOpenCloseStationAutomaticPanel,
+                    }}
                   >
-                    <TimeWindowContext.Provider
-                      value={{ timeWindow, changeTimeWindow }}
+                    <OpenCloseStationPanelContext.Provider
+                      value={{
+                        openCloseStationPanel,
+                        changeOpenCloseStationPanel,
+                      }}
                     >
-                      <StationsContext.Provider value={stations}>
-                        <AirQualityActiveStationParametersContext.Provider
+                      <OpenClosePlotPanelContext.Provider
+                        value={{ openClosePlotPanel, changeOpenClosePlotPanel }}
+                      >
+                        <TimeWindowAutomaticContext.Provider
                           value={{
-                            airQualityActiveStationParameters,
-                            changeAirQualityActiveStationParameters,
+                            timeWindowAutomatic,
+                            changeTimeWindowAutomatic,
                           }}
                         >
-                          <StationsAirQualityContext.Provider
-                            value={stationsAirQuality}
+                          <TimeWindowContext.Provider
+                            value={{ timeWindow, changeTimeWindow }}
                           >
-                            <AirQualityTimeSeriesContext.Provider
-                              value={{
-                                airQualityTimeSeries,
-                                changeAirQualityTimeSeries,
-                              }}
-                            >
-                              <MapContainer
-                                center={position}
-                                zoom={zoom}
-                                whenCreated={setMap}
-                                // touchZoom={true}
-                                doubleClickZoom={true}
-                                scrollWheelZoom={true}
-                                dragging={true}
-                                // animate={true}
-                                easeLinearity={0.35}
+                            <StationsContext.Provider value={stations}>
+                              <AirQualityActiveStationParametersContext.Provider
+                                value={{
+                                  airQualityActiveStationParameters,
+                                  changeAirQualityActiveStationParameters,
+                                }}
                               >
-                                <LayersControl>
-                                  <BaseLayers baseLayerData={baseLayersData} />
-                                  <StationsLayer />
-                                  <PolygonLayer
-                                    layerData={polygonsTerritoriales}
-                                    layerName="Territoriales"
-                                    reversePolygon={true}
-                                  />
-                                  {/* <PrecipitationHeatmap /> */}
-                                  <ContourPolygons data={null} />
-                                </LayersControl>
-                                <LocateControl />
-                                <LegendControl />
-                                {activeStation && <StationPanel />}
-                                {activeStationAutomatic && (
-                                  <StationPanelAutomatic />
-                                )}
-                                {activeStation && timeWindow && <PlotsPanel />}
-                                <LegendPanel />
-                              </MapContainer>
-                            </AirQualityTimeSeriesContext.Provider>
-                          </StationsAirQualityContext.Provider>
-                        </AirQualityActiveStationParametersContext.Provider>
-                      </StationsContext.Provider>
-                    </TimeWindowContext.Provider>
-                  </TimeWindowAutomaticContext.Provider>
-                </OpenClosePlotPanelContext.Provider>
-              </OpenCloseStationPanelContext.Provider>
-            </OpenCloseStationAutomaticPanelContext.Provider>
-          </OpenCloseLegendPanelContext.Provider>
-        </ActiveStationAutomaticContext.Provider>
-      </ActiveStationContext.Provider>
+                                <StationsAirQualityContext.Provider
+                                  value={stationsAirQuality}
+                                >
+                                  <AirQualityTimeSeriesContext.Provider
+                                    value={{
+                                      airQualityTimeSeries,
+                                      changeAirQualityTimeSeries,
+                                    }}
+                                  >
+                                    <MapContainer
+                                      center={position}
+                                      zoom={zoom}
+                                      whenCreated={setMap}
+                                      // touchZoom={true}
+                                      doubleClickZoom={true}
+                                      scrollWheelZoom={true}
+                                      dragging={true}
+                                      // animate={true}
+                                      // easeLinearity={0.35}
+                                    >
+                                      <LayersControl>
+                                        <BaseLayers
+                                          baseLayerData={baseLayersData}
+                                        />
+                                        <StationsLayer />
+                                        <PolygonLayer
+                                          layerData={polygonsTerritoriales}
+                                          layerName="Territoriales"
+                                          reversePolygon={true}
+                                        />
+                                        <RasterLayer />
+                                        {/* <PrecipitationHeatmap /> */}
+
+                                        {/* <ContourPolygons data={null} /> */}
+                                      </LayersControl>
+                                      <LocateControl />
+                                      <LegendControl />
+                                      <PrecipitationControl />
+                                      {activeStation && <StationPanel />}
+                                      {activeStationAutomatic && (
+                                        <StationPanelAutomatic />
+                                      )}
+                                      {activeStation && timeWindow && (
+                                        <PlotsPanel />
+                                      )}
+                                      <ClickValuePanel />
+                                      <LegendPanel />
+                                    </MapContainer>
+                                  </AirQualityTimeSeriesContext.Provider>
+                                </StationsAirQualityContext.Provider>
+                              </AirQualityActiveStationParametersContext.Provider>
+                            </StationsContext.Provider>
+                          </TimeWindowContext.Provider>
+                        </TimeWindowAutomaticContext.Provider>
+                      </OpenClosePlotPanelContext.Provider>
+                    </OpenCloseStationPanelContext.Provider>
+                  </OpenCloseStationAutomaticPanelContext.Provider>
+                </OpenCloseLegendPanelContext.Provider>
+              </OpenCloseClickValuePanelContext.Provider>
+            </ActiveStationAutomaticContext.Provider>
+          </ClickValueContext.Provider>
+        </ActiveStationContext.Provider>
+      </ShowPrecipitationContext.Provider>
     </MapContext.Provider>
   );
 };

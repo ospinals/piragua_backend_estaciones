@@ -45,6 +45,11 @@
   z-index: 500 !important;
 }
 
+.precipitation-control {
+  top: 149px !important;
+  z-index: 500 !important;
+}
+
 /* .close-button {
   position: absolute !important;
   right: 10px !important;
@@ -731,4 +736,33 @@ hr {
   margin-top: 15%;
   color: #000;
   font-size: x-large;
+}
+
+.leaflet-control-container .leaflet-top,
+.leaflet-control-container .leaflet-bottom {
+  will-change: transform;
+}
+
+.clickvalue-panel-control {
+  position: absolute;
+  background-color: #fff;
+  z-index: 999;
+  left: 10%;
+  bottom: 10%;
+  max-height: 50px;
+  width: 40%;
+  font-size: larger !important;
+  text-justify: center;
+  align-self: center;
+  justify-self: center;
+  display: block;
+  border-radius: 20px;
+}
+
+p.clickvalue {
+  margin: 0;
+  font-size: larger;
+  margin-left: 20%;
+  margin-right: 20%;
+  white-space: nowrap;
 }

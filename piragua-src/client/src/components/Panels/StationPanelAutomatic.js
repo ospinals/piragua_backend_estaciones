@@ -58,18 +58,15 @@ const StationPanelAutomatic = () => {
   };
 
   const handleClick = (e) => {
-    console.log("click");
     changeOpenCloseStationAutomaticPanel(false);
     changeActiveStationAutomatic(null);
   };
 
   const handleClickPlot = (e) => {
-    console.log("click");
     changeOpenClosePlotPanel(true);
   };
 
   const replaceNaN = (x) => {
-    console.log(x);
     if (isNaN(x) || x === 0) {
       return "-";
     } else if (typeof x === "string") {
@@ -176,7 +173,7 @@ const StationPanelAutomatic = () => {
     timeWindowAutomatic,
   }) {
     var curDate = new Date();
-    console.log(variable);
+
     const timeWindow2Hours = {
       "24h": 36,
       "30d": 24 * 30,
@@ -261,9 +258,6 @@ const StationPanelAutomatic = () => {
           ).toFixed(0)
         : null;
     }
-
-    console.log(data);
-    console.log(variableValue);
 
     return variableValue ? (
       <>
