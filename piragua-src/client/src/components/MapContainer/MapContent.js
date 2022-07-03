@@ -13,7 +13,6 @@ import StationPanel from "../Panels/StationPanel";
 import LegendControl from "./LegendControl";
 import PlotsPanel from "../Panels/PlotsPanel";
 import PolygonLayer from "../PolygonsLayer/Polygons";
-import ContourPolygons from "../Heatmap/ContourPolygons";
 
 import StationsAirQualityContext from "../../Context/StationsAirQualityContext";
 import ActiveStationContext from "../../Context/ActiveStationContext";
@@ -30,7 +29,6 @@ import TimeWindowContext from "../../Context/TimeWindowContext";
 import TimeWindowAutomaticContext from "../../Context/TimeWindowAutomaticContext";
 import LegendPanel from "../Panels/LegendPanel";
 import StationPanelAutomatic from "../Panels/StationPanelAutomatic";
-import PrecipitationHeatmap from "../Heatmap/PrecipitationHeatmap";
 import RasterLayer from "../Heatmap/Raster";
 import ClickValueContext from "../../Context/ClickValueContext";
 import OpenCloseClickValuePanelContext from "../../Context/OpenCloseClickValuePanelContext";
