@@ -33,7 +33,7 @@ const RasterLayer = () => {
   const { layerContainer, map } = useLeafletContext();
   const container = layerContainer || map;
 
-  var url_to_geotiff_file = "http://localhost:8082/planet_scope.tif";
+  var url_to_geotiff_file = "https://piragua.s3.amazonaws.com/planet_scope.tif";
 
   var GeoRasterLayer = require("georaster-layer-for-leaflet");
   var parseGeoraster = require("georaster");

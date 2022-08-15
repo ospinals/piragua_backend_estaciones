@@ -1,33 +1,23 @@
 ﻿describe('onRemove', function () {
-	/////////////////////////////
-	// SETUP FOR EACH TEST
-	/////////////////////////////
 	var map, div;
-
 	beforeEach(function () {
 		div = document.createElement('div');
 		div.style.width = '200px';
 		div.style.height = '200px';
 		document.body.appendChild(div);
 
-		map = L.map(div, { maxZoom: 18, trackResize: false });
+		map = L.map(div, { maxZoom: 18 });
 
 		map.fitBounds(new L.LatLngBounds([
 			[1, 1],
 			[2, 2]
 		]));
 	});
-
 	afterEach(function () {
-		map.remove();
 		document.body.removeChild(div);
-
-		map = div = null;
 	});
 
-	/////////////////////////////
-	// TESTS
-	/////////////////////////////
+
 	it('removes the shown coverage polygon', function () {
 
 		var group = new L.MarkerClusterGroup();

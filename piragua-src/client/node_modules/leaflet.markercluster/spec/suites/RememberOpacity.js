@@ -1,8 +1,5 @@
 describe('Remember opacity', function () {
-	/////////////////////////////
-	// SETUP FOR EACH TEST
-	/////////////////////////////
-	var map, div, clock, markers, group;
+	var map, div, clock, markers;
 
 	var markerDefs = [
 		{latLng: [ 0, 0], opts: {opacity: 0.9}},
@@ -27,37 +24,29 @@ describe('Remember opacity', function () {
 		div.style.height = '200px';
 		document.body.appendChild(div);
 
-		map = L.map(div, { maxZoom: 18, trackResize: false });
+		map = L.map(div, { maxZoom: 18 });
 
 		markers = [];
 		for (var i = 0; i < markerDefs.length; i++) {
 			markers.push( L.marker(markerDefs[i].latLng, markerDefs[i].opts ) );
 		}
 	});
-
 	afterEach(function () {
-		group.clearLayers();
-		map.removeLayer(group);
-		map.remove();
-		document.body.removeChild(div);
 		clock.restore();
 
-		clock = div = map = markers = group = null;
+		document.body.removeChild(div);
 	});
 
-	/////////////////////////////
-	// TESTS
-	/////////////////////////////
 	it('clusters semitransparent markers into an opaque one', function () {
 		map.setView(new L.LatLng(0,0), 1);
 
-		group = new L.MarkerClusterGroup({
+		var clusterLayer = new L.MarkerClusterGroup({
 			maxClusterRadius: 20
 		});
-		group.addLayers(markers);
-		map.addLayer(group);
+		clusterLayer.addLayers(markers);
+		map.addLayer(clusterLayer);
 
-		var visibleClusters = group._featureGroup.getLayers();
+		var visibleClusters = clusterLayer._featureGroup.getLayers();
 		expect(visibleClusters.length).to.be(1);
 		expect(visibleClusters[0].options.opacity).to.be(1);
 	});
@@ -67,16 +56,16 @@ describe('Remember opacity', function () {
 		map.setView(new L.LatLng(0,0), 1);
 		var visibleClusters;
 
-		group = new L.MarkerClusterGroup({
+		var clusterLayer = new L.MarkerClusterGroup({
 			maxClusterRadius: 20
 		});
-		group.addLayers(markers);
-		map.addLayer(group);
+		clusterLayer.addLayers(markers);
+		map.addLayer(clusterLayer);
 
 		map.fitBounds(bounds);
 		clock.tick(1000);
 
-		visibleClusters = group._featureGroup.getLayers();
+		visibleClusters = clusterLayer._featureGroup.getLayers();
 		expect(visibleClusters.length).to.be(9);
 		for (var i=0; i<9; i++) {
 			expect(visibleClusters[i].options.opacity).to.be.within(0.2,0.9);
@@ -89,7 +78,7 @@ describe('Remember opacity', function () {
 		map.fitBounds(bounds);
 		clock.tick(1000);
 
-		visibleClusters = group._featureGroup.getLayers();
+		visibleClusters = clusterLayer._featureGroup.getLayers();
 		expect(visibleClusters.length).to.be(9);
 		for (var i=0; i<9; i++) {
 			expect(visibleClusters[i].options.opacity).to.be.within(0.2,0.9);
@@ -100,18 +89,18 @@ describe('Remember opacity', function () {
 	it('has no problems zooming in and out several times', function () {
 		var visibleClusters;
 
-		group = new L.MarkerClusterGroup({
+		var clusterLayer = new L.MarkerClusterGroup({
 			maxClusterRadius: 20
 		});
-		group.addLayers(markers);
-		map.addLayer(group);
+		clusterLayer.addLayers(markers);
+		map.addLayer(clusterLayer);
 
 		// Zoom in and out a couple times
 		for (var i=0; i<10; i++) {
 			map.fitBounds(bounds);
 			clock.tick(1000);
 
-			visibleClusters = group._featureGroup.getLayers();
+			visibleClusters = clusterLayer._featureGroup.getLayers();
 			expect(visibleClusters.length).to.be(9);
 			for (var i=0; i<9; i++) {
 				expect(visibleClusters[i].options.opacity).to.be.within(0.2,0.9);
@@ -120,7 +109,7 @@ describe('Remember opacity', function () {
 			map.setView(new L.LatLng(0,0), 1);
 			clock.tick(1000);
 
-			visibleClusters = group._featureGroup.getLayers();
+			visibleClusters = clusterLayer._featureGroup.getLayers();
 			expect(visibleClusters.length).to.be(1);
 			expect(visibleClusters[0].options.opacity).to.be(1);
 		}
@@ -131,11 +120,11 @@ describe('Remember opacity', function () {
 		map.setView(new L.LatLng(0,0), 1);
 
 		var visibleClusters;
-		group = new L.MarkerClusterGroup({
+		var clusterLayer = new L.MarkerClusterGroup({
 			maxClusterRadius: 20
 		});
-		group.addLayers(markers);
-		map.addLayer(group);
+		clusterLayer.addLayers(markers);
+		map.addLayer(clusterLayer);
 
 
 		// Zoom in and out a couple times
@@ -153,7 +142,7 @@ describe('Remember opacity', function () {
 
 			map.setView(L.latLng(markerDefs[i].latLng), 18);
 			clock.tick(1000);
-			visibleClusters = group._featureGroup.getLayers();
+			visibleClusters = clusterLayer._featureGroup.getLayers();
 			expect(visibleClusters.length).to.be(1);
 			expect(visibleClusters[0].options.opacity).to.be(markerDefs[i].opts.opacity);
 		}

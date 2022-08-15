@@ -104,9 +104,6 @@ const StationsLayer = () => {
     OpenCloseStationAutomaticPanelContext
   );
 
-  // stations["estaciones"] &&
-  //   console.log(stations["estaciones"].filter((x) => x["tipo"] === 4));
-
   const [checkedAire, setCheckedAire] = useState(true);
   const [checkedPluvio, setCheckedPluvio] = useState(true);
   const [checkedNivel, setCheckedNivel] = useState(true);
@@ -180,7 +177,7 @@ const StationsLayer = () => {
         iconCreateFunction={createClusterCustomIcon}
       >
         {checkedAire &&
-          stationsAirQuality &&
+          stationsAirQuality["estaciones"] &&
           stationsAirQuality["estaciones"].map((station) => {
             return (
               <>

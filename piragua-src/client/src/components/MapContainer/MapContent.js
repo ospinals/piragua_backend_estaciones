@@ -122,7 +122,7 @@ const MapContent = () => {
 
   const { data: dataStationsAirQuality, error: errorStationsAirQuality } =
     useSWR(
-      `https://Geopiragua.corantioquia.gov.co/api/v1/estaciones-aire?tipo=198&random=${state.num}`,
+      `https://geopiragua.corantioquia.gov.co/api/v1/estaciones-aire?tipo=198`,
       fetcher
     );
 
@@ -246,15 +246,20 @@ const MapContent = () => {
                                         <BaseLayers
                                           baseLayerData={baseLayersData}
                                         />
-                                        <StationsLayer />
-                                        <PolygonLayer
-                                          layerData={polygonsTerritoriales}
-                                          layerName="Territoriales"
-                                          reversePolygon={true}
-                                        />
+                                        {stationsAirQuality["estaciones"] &&
+                                          stations["estaciones"] && (
+                                            <StationsLayer />
+                                          )}
+
+                                        {polygonsTerritoriales && (
+                                          <PolygonLayer
+                                            layerData={polygonsTerritoriales}
+                                            layerName="Territoriales"
+                                            reversePolygon={true}
+                                          />
+                                        )}
                                         <RasterLayer />
                                         {/* <PrecipitationHeatmap /> */}
-
                                         {/* <ContourPolygons data={null} /> */}
                                       </LayersControl>
                                       <LocateControl />
