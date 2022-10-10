@@ -1,5 +1,5 @@
 import React, { Fragment, useContext } from "react";
-import { LayersControl, LayerGroup, Polygon } from "react-leaflet";
+import { LayersControl, LayerGroup, Polygon, Tooltip } from "react-leaflet";
 
 const isMultiPolygon = (polygon) => Array.isArray(polygon[0][0]);
 
@@ -24,6 +24,7 @@ const PolygonLayer = ({
   /* ** SET HOOKS ****************************************************************************** */
 
   /* ** MAIN RENDER  *************************************************************************** */
+  console.log(layerData);
   return (
     <LayersControl.Overlay checked name={layerName}>
       <LayerGroup name={layerName}>
@@ -43,7 +44,12 @@ const PolygonLayer = ({
               }}
               positions={polygon}
               key={poly.id}
-            />
+            >
+              <Tooltip sticky>
+                <strong>Territorial</strong>
+                <p>{poly.nombre}</p>
+              </Tooltip>
+            </Polygon>
           );
         })}
       </LayerGroup>

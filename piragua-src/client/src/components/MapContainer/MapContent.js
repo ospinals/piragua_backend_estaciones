@@ -111,7 +111,7 @@ const MapContent = () => {
     data: dataPolygonsTerritoriales,
     error: errorDataPolygonsTerritoriales,
   } = useSWR(
-    "https://Geopiragua.corantioquia.gov.co/api/v1/localizacion/territoriales",
+    "https://geopiragua.corantioquia.gov.co/api/v1/localizacion/territoriales",
     fetcher
   );
 
@@ -132,7 +132,7 @@ const MapContent = () => {
       : {};
 
   const { data: dataStations, error: errorStations } = useSWR(
-    "https://geopiragua.corantioquia.gov.co/api/v1/estaciones",
+    "https://geopiragua.corantioquia.gov.co/api/v1/estaciones/",
     fetcher
   );
 
@@ -246,11 +246,6 @@ const MapContent = () => {
                                         <BaseLayers
                                           baseLayerData={baseLayersData}
                                         />
-                                        {stationsAirQuality["estaciones"] &&
-                                          stations["estaciones"] && (
-                                            <StationsLayer />
-                                          )}
-
                                         {polygonsTerritoriales && (
                                           <PolygonLayer
                                             layerData={polygonsTerritoriales}
@@ -258,9 +253,13 @@ const MapContent = () => {
                                             reversePolygon={true}
                                           />
                                         )}
+
+                                        {stationsAirQuality["estaciones"] &&
+                                          stations["estaciones"] && (
+                                            <StationsLayer />
+                                          )}
+
                                         <RasterLayer />
-                                        {/* <PrecipitationHeatmap /> */}
-                                        {/* <ContourPolygons data={null} /> */}
                                       </LayersControl>
                                       <LocateControl />
                                       <LegendControl />
@@ -272,7 +271,7 @@ const MapContent = () => {
                                       {activeStation && timeWindow && (
                                         <PlotsPanel />
                                       )}
-                                      <ClickValuePanel />
+                                      {showPrecipitation && <ClickValuePanel />}
                                       <LegendPanel />
                                     </MapContainer>
                                   </AirQualityTimeSeriesContext.Provider>

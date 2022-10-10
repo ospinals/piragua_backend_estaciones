@@ -65,7 +65,6 @@ export const icon = new Icon({
 });
 
 const layerNameAirQuality = "Red calidad aire";
-// const layerName = "Red meteorológica";
 
 const StationsLayer = () => {
   const IconsAirQuality = {
@@ -193,7 +192,7 @@ const StationsLayer = () => {
                       changeActiveStationAutomatic(null);
                     },
                   }}
-                  icon={IconsAirQuality[station["categoria"]]}
+                  // icon={IconsAirQuality[station["categoria"]]}
                 ></Marker>
               </>
             );

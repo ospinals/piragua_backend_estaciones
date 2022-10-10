@@ -23,7 +23,6 @@ const RasterLayer = () => {
     if (isNaN(value) || value === 0 || value === undefined || value === null) {
       changeClickValue(null);
       changeOpenCloseClickValuePanel(false);
-      console.log("click");
     } else {
       changeClickValue(value);
       changeOpenCloseClickValuePanel(true);
@@ -112,7 +111,6 @@ const RasterLayer = () => {
         });
       });
   } else {
-    console.log(1);
     container.eachLayer(function (layer) {
       if (layer instanceof GeoRasterLayer) container.removeLayer(layer);
     });
