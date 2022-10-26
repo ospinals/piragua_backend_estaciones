@@ -767,6 +767,19 @@ p.clickvalue {
   white-space: nowrap;
 }
 
-.test-polygon:active {
-  stroke-opacity: none;
+.tooltip-text {
+  text-align: center;
+  align-self: center;
+  /* vertical-align: middle; */
+  position: relative;
+  bottom: 50%;
+}
+
+.tooltip-title {
+  text-align: center;
+  align-self: center;
+  align-items: center;
+  vertical-align: middle;
+  font-size: 200;
+  /* top: 50%; */
 }

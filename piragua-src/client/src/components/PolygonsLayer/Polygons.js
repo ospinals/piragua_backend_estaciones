@@ -37,7 +37,6 @@ const PolygonLayer = ({
           /* build polygons */
           return (
             <Polygon
-              className="test-polygon"
               pathOptions={{
                 color: poly.color ? poly.color : color,
                 weight: poly.lineWidth ? poly.lineWidth : lineWidth,
@@ -46,9 +45,10 @@ const PolygonLayer = ({
               positions={polygon}
               key={poly.id}
             >
-              <Tooltip sticky>
-                <strong>Territorial</strong>
-                <p>{poly.nombre}</p>
+              <Tooltip className="tooltip-title">
+                {/* <strong className="tooltip-title">Territorial</strong>
+                <p className="tooltip-text">{poly.nombre}</p> */}
+                {poly.nombre}
               </Tooltip>
             </Polygon>
           );

@@ -15,7 +15,7 @@
     "geoblaze": "^1.1.0",
     "georaster": "^1.5.6",
     "georaster-layer-for-leaflet": "3.8.0",
-    "leaflet": "^1.7.1",
+    "leaflet": "1.7.1",
     "leaflet-contour": "^1.0.0",
     "leaflet.heat": "^0.2.0",
     "leaflet.locatecontrol": "^0.76.0",

@@ -192,7 +192,7 @@ const StationsLayer = () => {
                       changeActiveStationAutomatic(null);
                     },
                   }}
-                  // icon={IconsAirQuality[station["categoria"]]}
+                  icon={IconsAirQuality[station["categoria"]]}
                 ></Marker>
               </>
             );
