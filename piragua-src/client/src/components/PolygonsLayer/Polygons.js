@@ -37,6 +37,7 @@ const PolygonLayer = ({
           /* build polygons */
           return (
             <Polygon
+              className="test-polygon"
               pathOptions={{
                 color: poly.color ? poly.color : color,
                 weight: poly.lineWidth ? poly.lineWidth : lineWidth,
