@@ -45,7 +45,7 @@ const PolygonLayer = ({
               positions={polygon}
               key={poly.id}
             >
-              <Tooltip className="tooltip-title">
+              <Tooltip sticky className="tooltip-title">
                 {/* <strong className="tooltip-title">Territorial</strong>
                 <p className="tooltip-text">{poly.nombre}</p> */}
                 {poly.nombre}
